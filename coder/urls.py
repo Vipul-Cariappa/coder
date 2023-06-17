@@ -25,7 +25,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index, name="home"),
     path("", include("users.urls", namespace="user")),
-    # path('', include('challenges.urls', namespace="challenge")),
+    path('', include('challenges.urls', namespace="challenge")),
 ]
 
 if settings.DEBUG:

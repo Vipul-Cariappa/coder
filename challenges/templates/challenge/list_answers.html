@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<h1>questions</h1>
+<h1>{{ question.title }}</h1>
+{% for i in answers %}
+<h5>{{ i.answer }}</h5>
+<hr />
+{% endfor %} {% endblock content %}

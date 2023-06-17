@@ -18,9 +18,9 @@ class Question(models.Model):
     created_by = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, null=True, blank=True
     )
-    upload_time = models.DateTimeField()
-    users_attempted = models.IntegerField()
-    users_completed = models.IntegerField()
+    upload_time = models.DateTimeField(auto_now_add=True)
+    users_attempted = models.IntegerField(default=0)
+    users_completed = models.IntegerField(default=0)
     difficulty = models.CharField(max_length=20, choices=QUESTION_DIFFICULTY)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class Question(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.PROTECT)
     answer = models.TextField()
-    answer_time = models.DateTimeField()
+    answer_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
