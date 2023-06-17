@@ -1,27 +1,61 @@
-from django.shortcuts import render, redirect
+import os
+from pathlib import Path
+
 from django.contrib import messages
-from .forms import SignUpForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+
+from .forms import SignUpForm, UserProfileForm
+from .models import UserProfile
+
 
 # Create your views here.
-def index(request):
-    return render(request, 'demo.html', {})
-
 def signup(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             messages.success(request, f"User Created {username}!")
-            return redirect('users:index')
+            UserProfile(biography="", user=user).save()
+            return redirect("home")
     else:
         form = SignUpForm()
-    return render(request, 'users/signup.html', {'form': form})
+    return render(request, "users/signup.html", {"form": form})
 
 
 def redirect_login(request):
-    return redirect('users:index')
+    return redirect("home")
+
+
+@login_required
+def update_profile(request):
+    active_user = request.user
+
+    if request.method == "POST":
+        try:
+            profile = UserProfile.objects.get(user=active_user)
+        except UserProfile.DoesNotExist:
+            profile = UserProfile(user=active_user)
+
+        # deleting old uploaded image.
+        if (
+            profile.picture
+            and os.path.exists(profile.picture.path)
+            and os.path.basename(profile.picture.path) != "default.jpg"
+        ):
+            os.remove(profile.picture.path)
+
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    else:
+        form = UserProfileForm(request.POST)
+
+    return render(request, "users/update_profile.html", {"form": form})
