@@ -31,6 +31,9 @@ def run_code(solution, test_case):
 def prepare_test_case(test_case):
     return "from main import *\n" + test_case
 
+def js_stringify(string: str):
+    return "\"" + string.replace("\n", "\\n").replace("\"", "\\\"").replace("'", "\'") + "\""
+
 
 if __name__ == "__main__":
     run_code("", "")

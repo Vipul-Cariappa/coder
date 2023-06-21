@@ -12,7 +12,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>
 <script src="{% static 'meta.js' %}"></script>
 
 {% endblock header %} {% block content %}
@@ -85,16 +84,14 @@
   var button = document.getElementById("form_button");
 
   button.addEventListener("click", async function () {
-    let solution = s_editor.getValue();
-    let test_case = tc_editor.getValue();
-    let start_snippet = ss_editor.getValue();
-    let title = document.getElementById("id_title").value;
-    let difficulty = document.getElementById("id_difficulty").value;
-    let question = document.getElementById("id_question").value;
+    const solution = s_editor.getValue();
+    const test_case = tc_editor.getValue();
+    const start_snippet = ss_editor.getValue();
+    const title = document.getElementById("id_title").value;
+    const difficulty = document.getElementById("id_difficulty").value;
+    const question = document.getElementById("id_question").value;
 
     const csrftoken = getCookie("csrftoken");
-
-    console.log(csrftoken);
 
     const response = await fetch("{%  url 'challenge:new_question'  %}", {
       method: "POST",

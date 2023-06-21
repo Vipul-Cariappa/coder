@@ -12,6 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
+<script src="{% static 'meta.js' %}"></script>
 
 {% endblock header %} {% block content %}
 <div class="container">
@@ -29,8 +30,12 @@
         ></textarea>
         <form method="post">
           {% csrf_token %} {{ form.as_p }}
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-primary" id="form_button">
+            Submit
+          </button>
         </form>
+        <div id="stdout"></div>
+        <div id="stderr" style="color: red"></div>
       </div>
     </div>
   </div>
@@ -68,7 +73,38 @@
     }
   );
 
-  const test_case_string = "{{ question.test_case}}\nreturn false";
-  tc_editor.setValue(test_case_string);
+  tc_editor.setValue({{ question.test_case_string|safe }});
+  a_editor.setValue({{ question.start_snippet_string|safe }});
+
+  var button = document.getElementById("form_button");
+
+  button.addEventListener("click", async function () {
+    const answer = a_editor.getValue();
+
+    const csrftoken = getCookie("csrftoken");
+
+    const response = await fetch("{%  url 'challenge:answer' question.id  %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFTOKEN": csrftoken,
+      },
+      body: JSON.stringify({
+        answer: answer,
+      }),
+    });
+
+    console.log(response);
+    
+    if (response.status == 200 && response.redirected == true) {
+      window.location = response.url;
+    } else if (response.status == 200 && response.redirected == false) {
+      let stdout = document.getElementById("stdout");
+      let stderr = document.getElementById("stderr");
+      let result = await response.json();
+      stdout.innerText = result["stdout"];
+      stderr.innerText = result["stderr"];
+    }
+  });
 </script>
 {% endblock content %}
