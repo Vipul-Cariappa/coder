@@ -1,8 +1,12 @@
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from markdown import markdown
 
 from .forms import AnswerForm, QuestionForm
+from .functions import prepare_test_case, run_code
 from .models import Answer, Question
 
 
@@ -12,17 +16,30 @@ def create_question(request):
     active_user = request.user
     
     if request.method == "POST":
-        form = QuestionForm(request.POST)
+        post = json.loads(request.body.decode("utf-8"))
         
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.create_by = active_user
-            post.questionHTML = markdown(post.question)
-            post.save()
-            return redirect("challenge:list")
+        test_case = prepare_test_case(post["test_case"])
+        solution = post["solution"]
+
+        code_run_result = run_code(solution, test_case)["run"]
+        
+        if code_run_result["code"] == 0:
+            Question(
+                title=post["title"],
+                question=post["question"],
+                questionHTML=markdown(post["question"]),
+                solution=post["solution"],
+                test_case=post["test_case"],
+                start_snippet=post["start_snippet"],
+                created_by=active_user,
+                difficulty=post["difficulty"],
+            )#.save()
+            
+            return redirect("home") # FIXME: detail question page
+        else:
+            return JsonResponse(code_run_result)
     
     form = QuestionForm()
-    
     return render(request, "challenge/new_question.html", {"form": form})
 
 def list_questions(request):

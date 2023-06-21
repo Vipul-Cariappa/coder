@@ -15,6 +15,7 @@ class Question(models.Model):
     questionHTML = models.TextField()
     solution = models.TextField()
     test_case = models.TextField()
+    start_snippet = models.TextField()
     created_by = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, null=True, blank=True
     )
