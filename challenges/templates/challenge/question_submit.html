@@ -15,19 +15,13 @@
 <script src="{% static 'meta.js' %}"></script>
 
 {% endblock header %} {% block content %}
+<br />
 <div class="container">
   <div class="container">
     <div class="container">
       <div class="box">
-        <h1>{{ question.title }}</h1>
-        <p>{{ question.questionHTML|safe}}</p>
-        <textarea
-          name="test_case"
-          cols="40"
-          rows="10"
-          required
-          id="id_test_case"
-        ></textarea>
+        <br />
+        <br />
         <form method="post">
           {% csrf_token %} {{ form.as_p }}
           <button type="button" class="btn btn-primary" id="form_button">
@@ -42,8 +36,8 @@
 </div>
 
 <script type="text/javascript">
-  var a_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_answer"),
+  var s_editor = new CodeMirror.fromTextArea(
+    document.getElementById("id_solution"),
     {
       lineNumbers: true,
       mode: "python",
@@ -68,34 +62,54 @@
       lineWrapping: true,
       matchBrackets: true,
       autoCloseBrackets: true,
-      styleActiveLine: false,
-      readOnly: true,
+      styleActiveLine: true,
     }
   );
 
-  tc_editor.setValue({{ question.test_case_string|safe }});
-  a_editor.setValue({{ question.start_snippet_string|safe }});
+  var ss_editor = new CodeMirror.fromTextArea(
+    document.getElementById("id_start_snippet"),
+    {
+      lineNumbers: true,
+      mode: "python",
+      theme: "monokai",
+      indentUnit: 4,
+      indentWithTabs: false,
+      lineWrapping: true,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      styleActiveLine: true,
+    }
+  );
 
   var button = document.getElementById("form_button");
 
   button.addEventListener("click", async function () {
-    const answer = a_editor.getValue();
+    const solution = s_editor.getValue().replaceAll("\t", "    ");
+    const test_case = tc_editor.getValue().replaceAll("\t", "    ");
+    const start_snippet = ss_editor.getValue().replaceAll("\t", "    ");
+    const title = document.getElementById("id_title").value;
+    const difficulty = document.getElementById("id_difficulty").value;
+    const question = document.getElementById("id_question").value;
 
     const csrftoken = getCookie("csrftoken");
 
-    const response = await fetch("{%  url 'challenge:answer' question.id  %}", {
+    const response = await fetch("{%  url 'challenge:new_question'  %}", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRFTOKEN": csrftoken,
       },
       body: JSON.stringify({
-        answer: answer,
+        solution: solution,
+        test_case: test_case,
+        title: title,
+        difficulty: difficulty,
+        question: question,
+        start_snippet: start_snippet,
       }),
     });
 
     console.log(response);
-    
     if (response.status == 200 && response.redirected == true) {
       window.location = response.url;
     } else if (response.status == 200 && response.redirected == false) {

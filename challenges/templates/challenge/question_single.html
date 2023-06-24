@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<a href="{%  url 'challenge:answer' question.id  %}"
+  ><h2>Title: {{ question.title }}</h2></a
+>
+<p>{{ question.difficulty }}</p>
+<p>Description:<br />{{ question.questionHTML|safe }}</p>
+<p>Test Cases:</p>
+<textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
+
+<script type="text/javascript">
+  var tc_editor = new CodeMirror.fromTextArea(
+      document.getElementById("id_test_case"),
+      {
+        lineNumbers: true,
+        mode: "python",
+        theme: "monokai",
+        indentUnit: 4,
+        indentWithTabs: false,
+        lineWrapping: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        styleActiveLine: false,
+        readOnly: true,
+      }
+    );
+
+    tc_editor.setValue({{ question.test_case_string|safe }});
+</script>
+
+{% endblock content %}

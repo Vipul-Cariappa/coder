@@ -15,13 +15,18 @@
 <script src="{% static 'meta.js' %}"></script>
 
 {% endblock header %} {% block content %}
-<br />
 <div class="container">
   <div class="container">
     <div class="container">
       <div class="box">
-        <br />
-        <br />
+        <h1>{{ question.title }}</h1>
+        <p>{{ question.questionHTML|safe}}</p>
+        <textarea
+          name="test_case"
+          cols="40"
+          rows="10"
+          id="id_test_case"
+        ></textarea>
         <form method="post">
           {% csrf_token %} {{ form.as_p }}
           <button type="button" class="btn btn-primary" id="form_button">
@@ -36,8 +41,8 @@
 </div>
 
 <script type="text/javascript">
-  var s_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_solution"),
+  var a_editor = new CodeMirror.fromTextArea(
+    document.getElementById("id_answer"),
     {
       lineNumbers: true,
       mode: "python",
@@ -62,54 +67,46 @@
       lineWrapping: true,
       matchBrackets: true,
       autoCloseBrackets: true,
-      styleActiveLine: true,
+      styleActiveLine: false,
+      readOnly: true,
     }
   );
 
-  var ss_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_start_snippet"),
-    {
-      lineNumbers: true,
-      mode: "python",
-      theme: "monokai",
-      indentUnit: 4,
-      indentWithTabs: false,
-      lineWrapping: true,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      styleActiveLine: true,
-    }
-  );
+  tc_editor.setValue({{ question.test_case_string|safe }});
+
+  {% if answer is None %}
+    a_editor.setValue({{ question.start_snippet_string|safe }});
+  {% else %}
+    a_editor.setValue({{ answer.answer_string|safe }});
+  {% endif %}
+
+  {% if answer is None %}
+    var pk = -1;
+  {% else %}
+    var pk = {{answer.pk }};
+  {% endif %}
 
   var button = document.getElementById("form_button");
 
   button.addEventListener("click", async function () {
-    const solution = s_editor.getValue();
-    const test_case = tc_editor.getValue();
-    const start_snippet = ss_editor.getValue();
-    const title = document.getElementById("id_title").value;
-    const difficulty = document.getElementById("id_difficulty").value;
-    const question = document.getElementById("id_question").value;
+    const answer = a_editor.getValue().replaceAll("\t", "    ");
 
     const csrftoken = getCookie("csrftoken");
 
-    const response = await fetch("{%  url 'challenge:new_question'  %}", {
+    const response = await fetch("{%  url 'challenge:answer' question.id  %}", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRFTOKEN": csrftoken,
       },
       body: JSON.stringify({
-        solution: solution,
-        test_case: test_case,
-        title: title,
-        difficulty: difficulty,
-        question: question,
-        start_snippet: start_snippet,
+        answer: answer,
+        pk: pk,
       }),
     });
 
     console.log(response);
+
     if (response.status == 200 && response.redirected == true) {
       window.location = response.url;
     } else if (response.status == 200 && response.redirected == false) {
@@ -118,6 +115,9 @@
       let result = await response.json();
       stdout.innerText = result["stdout"];
       stderr.innerText = result["stderr"];
+      pk = result["pk"];
+    } else {
+      stderr.innerText = "Unexpected Error Occurred while communicating with Server."
     }
   });
 </script>
