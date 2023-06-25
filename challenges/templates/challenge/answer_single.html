@@ -20,17 +20,24 @@
 <h2>Title: {{ question.title }}</h2>
 <p>{{ question.difficulty }}</p>
 <p>Description:<br />{{ question.questionHTML|safe }}</p>
-<p>Users Attempted: {{ users_attempted }}</p>
-<p>Users Completed: {{ users_completed }}</p>
+{% comment %} <p>Users Attempted: {{ users_attempted }}</p>
+<p>Users Completed: {{ users_completed }}</p> {% endcomment %}
+<p>My Solution:</p>
+<textarea name="test_case" cols="40" rows="10" id="id_solution"></textarea>
+<p>
+  {% if active_user == answer.user %}
+  <a href="{% url "challenge:answer" question.id %}" class="button btn btn-primary">Update</a>
+  {% endif %}
+</p>
 <p>Test Cases:</p>
 <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
 
-{% if solved %}
-<a href="{% url "challenge:answer_view" answer.id %}" class="button btn btn-primary">My Solution</a>
-<a href="{% url "challenge:list_answer" question.id %}" class="button btn btn-primary">Other Solutions</a>
+{% comment %} {% if solved %}
+<a href="{% url "challenge:answer_view" question.id %}" class="button btn btn-primary">My Solution</a>
+<a href="{% url "challenge:answers_list" question.id %}" class="button btn btn-primary">Other Solution</a>
 {% else %}
 <a href="{% url "challenge:answer" question.id %}" class="button btn btn-primary">Solve</a>
-{% endif %}
+{% endif %} {% endcomment %}
 
 
 <script type="text/javascript">
@@ -51,6 +58,24 @@
     );
 
     tc_editor.setValue({{ question.test_case_string|safe }});
+  
+    var s_editor = new CodeMirror.fromTextArea(
+      document.getElementById("id_solution"),
+      {
+        lineNumbers: true,
+        mode: "python",
+        theme: "monokai",
+        indentUnit: 4,
+        indentWithTabs: false,
+        lineWrapping: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        styleActiveLine: false,
+        readOnly: true,
+      }
+    );
+
+    s_editor.setValue({{ answer.answer_string|safe }});
 </script>
 
 

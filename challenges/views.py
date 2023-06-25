@@ -52,7 +52,28 @@ def questions_list(request):
     }
     return render(request, "challenge/questions_list.html", context)
 
+def question_view(request, question_id):
+    active_user = request.user
+    
+    question = get_object_or_404(Question, pk=question_id)
+    
+    context = {
+        "question": question, 
+        "users_attempted": question.users_attempted.all().count(), 
+        "users_completed": question.users_completed.all().count(),
+    }
+    
+    if question.users_completed.contains(active_user):
+        context["solved"] = True
+        context["answer"] = Answer.objects.filter(question__pk=question_id, user=active_user).first()
+    else:
+        context["solved"] = False
+        
+    
+    return render(request, "challenge/question_single.html", context)
 
+
+@login_required
 def answers_list(request, question_id):
     context = {
         "answers": Answer.objects.filter(question_id=question_id),
@@ -60,6 +81,11 @@ def answers_list(request, question_id):
     }
     return render(request, "challenge/answers_list.html", context)
 
+@login_required
+def answer_view(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+    question = get_object_or_404(Question, pk=answer.question.pk)
+    return render(request, "challenge/answer_single.html", {"answer": answer, "question": question, "active_user": request.user,})
 
 @login_required
 def answer_submit(request, question_id):
