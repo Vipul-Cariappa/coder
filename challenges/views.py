@@ -39,7 +39,7 @@ def question_submit(request):
             question.save()
 
             messages.success(request, "Question Added Successfully")
-            return redirect("challenge:question_view", question.pk)
+            return JsonResponse({"pk": question.pk, "code": 0})
 
         else:
             return JsonResponse(code_run_result)
@@ -131,8 +131,6 @@ def answer_submit(request, question_id):
                 )
                 answer_object.save()
 
-                code_run_result["pk"] = answer_object.pk
-
             else:
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
@@ -140,20 +138,20 @@ def answer_submit(request, question_id):
                 answer_object.tests_pass = True
                 answer_object.save()
 
+            code_run_result["pk"] = answer_object.pk
+            
             messages.success(
                 request, "Congratulations  🎉🎊\nYou have Solved the given Question"
             )
-            return redirect("challenge:answer_view", answer_object.pk)
+            return JsonResponse(code_run_result)
         else:
             # tests dont pass but save the code
             if pk == -1:
                 # create new answer
-                new_ans = Answer(
+                answer_object = Answer(
                     question=question, answer=answer, user=active_user, tests_pass=False
                 )
-                new_ans.save()
-
-                code_run_result["pk"] = new_ans.pk
+                answer_object.save()
 
             else:
                 # update existing answer
@@ -161,9 +159,9 @@ def answer_submit(request, question_id):
                 answer_object.answer = answer
                 answer_object.tests_pass = False
                 answer_object.save()
-
-                code_run_result["pk"] = answer_object.pk
                 # question.users_completed.remove(active_user)
+            
+            code_run_result["pk"] = answer_object.pk
 
             return JsonResponse(code_run_result)
 

@@ -105,15 +105,25 @@
       }),
     });
 
-    console.log(response);
-    if (response.status == 200 && response.redirected == true) {
-      window.location = response.url;
-    } else if (response.status == 200 && response.redirected == false) {
+    // console.log(response);
+    
+    if (response.status == 200 ) {
       let stdout = document.getElementById("stdout");
       let stderr = document.getElementById("stderr");
+      
       let result = await response.json();
+      pk = result["pk"];
+
+      console.log(result);
+
+      if (result["code"] == 0) {
+        window.location.replace("/question_view/" + pk);
+      }
+
       stdout.innerText = result["stdout"];
       stderr.innerText = result["stderr"];
+    } else {
+      stderr.innerText = "Unexpected Error Occurred while communicating with Server."
     }
   });
   </script>
