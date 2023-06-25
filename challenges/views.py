@@ -1,5 +1,6 @@
 import json
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
@@ -25,7 +26,7 @@ def question_submit(request):
         code_run_result = run_code(solution, test_case)["run"]
 
         if code_run_result["code"] == 0:
-            Question(
+            question = Question(
                 title=post["title"],
                 question=post["question"],
                 questionHTML=markdown(post["question"]),
@@ -34,9 +35,12 @@ def question_submit(request):
                 start_snippet=post["start_snippet"],
                 created_by=active_user,
                 difficulty=post["difficulty"],
-            ).save()
+            )
+            question.save()
 
-            return redirect("home")  # FIXME: detail question page
+            messages.success(request, "Question Added Successfully")
+            return redirect("challenge:question_view", question.pk)
+
         else:
             return JsonResponse(code_run_result)
 
@@ -122,12 +126,12 @@ def answer_submit(request, question_id):
 
             if pk == -1:
                 # create new answer
-                new_ans = Answer(
+                answer_object = Answer(
                     question=question, answer=answer, user=active_user, tests_pass=True
                 )
-                new_ans.save()
+                answer_object.save()
 
-                code_run_result["pk"] = new_ans.pk
+                code_run_result["pk"] = answer_object.pk
 
             else:
                 # update existing answer
@@ -136,7 +140,10 @@ def answer_submit(request, question_id):
                 answer_object.tests_pass = True
                 answer_object.save()
 
-            return redirect("home")  # FIXME: detail answer page
+            messages.success(
+                request, "Congratulations  🎉🎊\nYou have Solved the given Question"
+            )
+            return redirect("challenge:answer_view", answer_object.pk)
         else:
             # tests dont pass but save the code
             if pk == -1:

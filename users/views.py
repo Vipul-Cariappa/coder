@@ -20,8 +20,8 @@ def signup(request):
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            messages.success(request, f"User Created {username}!")
             UserProfile(biography="", user=user).save()
+            messages.success(request, f"User Created {username}!")
             return redirect("home")
     else:
         form = SignUpForm()
@@ -52,11 +52,10 @@ def update_profile(request):
         ):
             os.remove(profile.picture.path)
 
-        # form = UserProfileForm(request.POST, request.FILES, instance=profile)
-
         if form.is_valid():
             form.save()
-            return redirect("home")
+            messages.success(request, "Updated Profile!")
+            return redirect("user:profile", profile.pk)
 
     return render(
         request, "users/update_profile.html", {"form": form, "profile": profile}
