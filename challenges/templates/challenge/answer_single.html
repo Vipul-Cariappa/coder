@@ -57,7 +57,7 @@
       }
     );
 
-    tc_editor.setValue({{ question.test_case_string|safe }});
+    tc_editor.setValue("{{ question.test_case|escapejs }}");
   
     var s_editor = new CodeMirror.fromTextArea(
       document.getElementById("id_solution"),
@@ -75,7 +75,7 @@
       }
     );
 
-    s_editor.setValue({{ answer.answer_string|safe }});
+    s_editor.setValue("{{ answer.answer|escapejs }}");
 </script>
 
 

@@ -8,7 +8,7 @@ from PIL import Image
 
 # Create your models here.
 class UserProfile(models.Model):
-    biography = models.CharField(max_length=300, default="My Bio")
+    biography = models.TextField(max_length=500, default="My Bio")
     picture = models.ImageField(upload_to="images/", default="default.jpg")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

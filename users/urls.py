@@ -8,7 +8,8 @@ app_name = "users"
 
 
 urlpatterns = [
-    path("profile/", views.update_profile, name="profile"),
+    path("update_profile/", views.update_profile, name="update_profile"),
+    path("profile/<int:user_id>", views.profile, name="profile"),
     path("signup/", views.signup, name="signup"),
     path(
         "accounts/login/",

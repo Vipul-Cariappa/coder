@@ -7,11 +7,16 @@
         <br />
         <br />
         <form method="post" enctype="multipart/form-data">
-          {% csrf_token %} {{ form }}
+          {% csrf_token %} {{ form.as_p }}
           <button type="submit" class="btn btn-primary">Update</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  var bio_textarea = document.getElementById("id_biography");
+  bio_textarea.value = "{{ profile.biography|escapejs }}";
+</script>
 {% endblock content %}

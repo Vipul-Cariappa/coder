@@ -50,7 +50,7 @@
       }
     );
 
-    tc_editor.setValue({{ question.test_case_string|safe }});
+    tc_editor.setValue("{{ question.test_case|escapejs }}");
 </script>
 
 

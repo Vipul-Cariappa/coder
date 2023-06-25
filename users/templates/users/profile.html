@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<img src="/media/{{ user_profile.picture.path }}"/>
+<p><h3>Bio</h3>{{ user_profile.biography }}</p>
+
+{% if user == user_profile.user %}
+<a href="{% url "users:update_profile" %}" class="button btn btn-primary">Update</a>
+{% endif %}
+
+{% for i in user.answer_set.all %}
+    {% if i.tests_pass %}
+        <p><a href="{% url "challenge:answer_view" i.pk %}">{{ i.question.title }}</a> Difficulty: {{ i.question.difficulty }}</p>
+    {% endif %}
+{% endfor %}
+
+<hr>
+
+{% for i in user.question_set.all %}
+        <p><a href="{% url "challenge:question_view" i.pk %}">{{ i.title }}</a> Difficulty: {{ i.difficulty }}</p>
+{% endfor %}
+
+{% endblock content %}

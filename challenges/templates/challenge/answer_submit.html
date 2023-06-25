@@ -72,12 +72,12 @@
     }
   );
 
-  tc_editor.setValue({{ question.test_case_string|safe }});
+  tc_editor.setValue("{{ question.test_case|escapejs }}");
 
   {% if answer is None %}
-    a_editor.setValue({{ question.start_snippet_string|safe }});
+    a_editor.setValue("{{ question.start_snippet|escapejs }}");
   {% else %}
-    a_editor.setValue({{ answer.answer_string|safe }});
+    a_editor.setValue("{{ answer.answer|escapejs }}");
   {% endif %}
 
   {% if answer is None %}
