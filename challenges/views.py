@@ -50,24 +50,26 @@ def questions_list(request):
     }
     return render(request, "challenge/questions_list.html", context)
 
+
 def question_view(request, question_id):
     active_user = request.user
-    
+
     question = get_object_or_404(Question, pk=question_id)
-    
+
     context = {
-        "question": question, 
-        "users_attempted": question.users_attempted.all().count(), 
+        "question": question,
+        "users_attempted": question.users_attempted.all().count(),
         "users_completed": question.users_completed.all().count(),
     }
-    
+
     if question.users_completed.contains(active_user):
         context["solved"] = True
-        context["answer"] = Answer.objects.filter(question__pk=question_id, user=active_user).first()
+        context["answer"] = Answer.objects.filter(
+            question__pk=question_id, user=active_user
+        ).first()
     else:
         context["solved"] = False
-        
-    
+
     return render(request, "challenge/question_single.html", context)
 
 
@@ -79,22 +81,31 @@ def answers_list(request, question_id):
     }
     return render(request, "challenge/answers_list.html", context)
 
+
 @login_required
 def answer_view(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
     question = get_object_or_404(Question, pk=answer.question.pk)
-    return render(request, "challenge/answer_single.html", {"answer": answer, "question": question, "active_user": request.user,})
+    return render(
+        request,
+        "challenge/answer_single.html",
+        {
+            "answer": answer,
+            "question": question,
+            "active_user": request.user,
+        },
+    )
+
 
 @login_required
 def answer_submit(request, question_id):
     # FIXME: repetition of code
     question = get_object_or_404(Question, pk=question_id)
     active_user = request.user
-    
 
     if request.method == "POST":
         question.users_attempted.add(active_user)
-        
+
         # Extract details from the POST request
         post = json.loads(request.body.decode("utf-8"))
 
@@ -108,19 +119,16 @@ def answer_submit(request, question_id):
         if code_run_result["code"] == 0:
             # all tests pass
             question.users_completed.add(active_user)
-            
+
             if pk == -1:
                 # create new answer
                 new_ans = Answer(
-                    question=question,
-                    answer=answer,
-                    user=active_user,
-                    tests_pass=True
+                    question=question, answer=answer, user=active_user, tests_pass=True
                 )
                 new_ans.save()
-                
+
                 code_run_result["pk"] = new_ans.pk
-                
+
             else:
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
@@ -134,32 +142,30 @@ def answer_submit(request, question_id):
             if pk == -1:
                 # create new answer
                 new_ans = Answer(
-                    question=question,
-                    answer=answer,
-                    user=active_user,
-                    tests_pass=False
+                    question=question, answer=answer, user=active_user, tests_pass=False
                 )
                 new_ans.save()
-                
+
                 code_run_result["pk"] = new_ans.pk
-                
+
             else:
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
                 answer_object.answer = answer
                 answer_object.tests_pass = False
                 answer_object.save()
-                
+
                 code_run_result["pk"] = answer_object.pk
-                
+                # question.users_completed.remove(active_user)
+
             return JsonResponse(code_run_result)
 
     # get request processing
     context = {"form": AnswerForm(), "question": question}
-    
+
     try:
         context["answer"] = Answer.objects.get(user=active_user, question=question)
     except ObjectDoesNotExist:
         context["answer"] = None
-        
+
     return render(request, "challenge/answer_submit.html", context)

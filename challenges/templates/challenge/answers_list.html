@@ -1,7 +1,12 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<h1>questions</h1>
-<h1>{{ question.title }}</h1>
-{% for i in answers %}
-<a href="{%  url 'challenge:answer_view' i.id  %}"><h5>{{ i }}</h5></a>
-<hr />
-{% endfor %} {% endblock content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <h1>questions</h1>
+    <h1>{{ question.title }}</h1>
+    {% for i in answers %}
+        <a href="{% url 'challenge:answer_view' i.id %}">
+            <h5>{{ i }}</h5>
+        </a>
+        <hr />
+    {% endfor %}
+{% endblock content %}

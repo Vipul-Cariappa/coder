@@ -40,9 +40,9 @@ def update_profile(request):
         profile = UserProfile.objects.get(user=active_user)
     except UserProfile.DoesNotExist:
         profile = UserProfile(user=active_user)
-        
+
     form = UserProfileForm(request.POST or None, request.FILES, instance=profile)
-    
+
     if request.method == "POST":
         # deleting old uploaded image.
         if (
@@ -58,9 +58,12 @@ def update_profile(request):
             form.save()
             return redirect("home")
 
-    return render(request, "users/update_profile.html", {"form": form, "profile": profile})
+    return render(
+        request, "users/update_profile.html", {"form": form, "profile": profile}
+    )
+
 
 def profile(request, user_id):
     user_profile = get_object_or_404(UserProfile, user__pk=user_id)
-    
+
     return render(request, "users/profile.html", {"user_profile": user_profile})

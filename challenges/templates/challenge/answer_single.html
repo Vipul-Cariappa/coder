@@ -1,46 +1,36 @@
-{% extends "base.html" %} {% load static %} {% block header %}
-<link
-  href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
-  rel="stylesheet"
-/>
-<link
-  href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css"
-  rel="stylesheet"
-/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
-<script src="{% static 'meta.js' %}"></script>
-
+{% extends "base.html" %}
+{% load static %}
+{% block header %}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
+        rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css"
+        rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
+  <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
-
-{% load static %} {% block content %}
-<h2>Title: {{ question.title }}</h2>
-<p>{{ question.difficulty }}</p>
-<p>Description:<br />{{ question.questionHTML|safe }}</p>
-{% comment %} <p>Users Attempted: {{ users_attempted }}</p>
-<p>Users Completed: {{ users_completed }}</p> {% endcomment %}
-<p>My Solution:</p>
-<textarea name="test_case" cols="40" rows="10" id="id_solution"></textarea>
-<p>
-  {% if active_user == answer.user %}
-  <a href="{% url "challenge:answer" question.id %}" class="button btn btn-primary">Update</a>
-  {% endif %}
-</p>
-<p>Test Cases:</p>
-<textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
-
-{% comment %} {% if solved %}
-<a href="{% url "challenge:answer_view" question.id %}" class="button btn btn-primary">My Solution</a>
-<a href="{% url "challenge:answers_list" question.id %}" class="button btn btn-primary">Other Solution</a>
-{% else %}
-<a href="{% url "challenge:answer" question.id %}" class="button btn btn-primary">Solve</a>
-{% endif %} {% endcomment %}
-
-
-<script type="text/javascript">
+{% block content %}
+  <h2>Title: {{ question.title }}</h2>
+  <p>{{ question.difficulty }}</p>
+  <p>
+    Description:
+    <br />
+    {{ question.questionHTML|safe }}
+  </p>
+  <p>My Solution:</p>
+  <textarea name="test_case" cols="40" rows="10" id="id_solution"></textarea>
+  <p>
+    {% if active_user == answer.user %}
+      <a href="{% url "challenge:answer" question.id %}"
+         class="button btn btn-primary">Update</a>
+    {% endif %}
+  </p>
+  <p>Test Cases:</p>
+  <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
+  <script type="text/javascript">
   var tc_editor = new CodeMirror.fromTextArea(
       document.getElementById("id_test_case"),
       {
@@ -76,7 +66,5 @@
     );
 
     s_editor.setValue("{{ answer.answer|escapejs }}");
-</script>
-
-
+  </script>
 {% endblock content %}

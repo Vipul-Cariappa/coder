@@ -1,22 +1,23 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<br />
-<div class="container">
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <br />
   <div class="container">
     <div class="container">
-      <div class="box">
-        <br />
-        <br />
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %} {{ form.as_p }}
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+      <div class="container">
+        <div class="box">
+          <br />
+          <br />
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<script type="text/javascript">
+  <script type="text/javascript">
   var bio_textarea = document.getElementById("id_biography");
   bio_textarea.value = "{{ profile.biography|escapejs }}";
-</script>
+  </script>
 {% endblock content %}
