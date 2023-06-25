@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from markdown import markdown
 
 from .forms import AnswerForm, QuestionForm
-from .functions import js_stringify, prepare_test_case, run_code
+from .functions import prepare_test_case, run_code
 from .models import Answer, Question
 
 
@@ -31,9 +31,7 @@ def question_submit(request):
                 questionHTML=markdown(post["question"]),
                 solution=post["solution"],
                 test_case=post["test_case"],
-                test_case_string=js_stringify(post["test_case"]),
                 start_snippet=post["start_snippet"],
-                start_snippet_string=js_stringify(post["start_snippet"]),
                 created_by=active_user,
                 difficulty=post["difficulty"],
             ).save()
@@ -116,7 +114,6 @@ def answer_submit(request, question_id):
                 new_ans = Answer(
                     question=question,
                     answer=answer,
-                    answer_string=js_stringify(answer),
                     user=active_user,
                     tests_pass=True
                 )
@@ -128,7 +125,6 @@ def answer_submit(request, question_id):
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
                 answer_object.answer = answer
-                answer_object.answer_string = js_stringify(answer)
                 answer_object.save()
 
             return redirect("home")  # FIXME: detail answer page
@@ -139,7 +135,6 @@ def answer_submit(request, question_id):
                 new_ans = Answer(
                     question=question,
                     answer=answer,
-                    answer_string=js_stringify(answer),
                     user=active_user,
                     tests_pass=False
                 )
@@ -151,7 +146,6 @@ def answer_submit(request, question_id):
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
                 answer_object.answer = answer
-                answer_object.answer_string = js_stringify(answer)
                 answer_object.save()
                 
                 code_run_result["pk"] = answer_object.pk

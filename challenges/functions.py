@@ -29,10 +29,7 @@ def run_code(solution, test_case):
 
 
 def prepare_test_case(test_case):
-    return "from main import *\n" + test_case
-
-def js_stringify(string: str):
-    return "\"" + string.replace("\n", "\\n").replace("\"", "\\\"").replace("'", "\'") + "\""
+    return "from main import *;" + test_case
 
 
 if __name__ == "__main__":
