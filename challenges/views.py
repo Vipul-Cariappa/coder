@@ -125,6 +125,7 @@ def answer_submit(request, question_id):
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
                 answer_object.answer = answer
+                answer_object.tests_pass = True
                 answer_object.save()
 
             return redirect("home")  # FIXME: detail answer page
@@ -146,6 +147,7 @@ def answer_submit(request, question_id):
                 # update existing answer
                 answer_object = get_object_or_404(Answer, pk=pk)
                 answer_object.answer = answer
+                answer_object.tests_pass = False
                 answer_object.save()
                 
                 code_run_result["pk"] = answer_object.pk
