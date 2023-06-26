@@ -7,28 +7,38 @@
             <div class="card-header">
                 <div class="row justify-content-between">
                     <div class="col">
-                        <a href="{% url 'challenge:question_view' i.id %}"
-                           style="text-decoration:none">
-                            <h4 class="card-title">{{ i.title }}</h4>
-                        </a>
+                        <div class="card-title">
+                            <a href="{% url 'challenge:question_view' i.id %}"
+                               style="text-decoration:none">
+                                <h4 style="text-align: left; float: left;">{{ i.title }}</h4>
+                            </a>
+                            <h5 style="text-align: right; float: right;">
+                                By <a href="{% url 'user:profile' i.created_by.pk %}"
+    style="text-decoration:none">
+                                <img src="{{ i.created_by.userprofile.picture.url }}"
+                                     alt=""
+                                     style="width: 30px;
+                                            height: 30px;
+                                            object-fit: contain;
+                                            margin-left: 10px;
+                                            margin-right: 10px;
+                                            {% comment %} border-radius: 50%;
+                                            {% endcomment %}">
+                            {{ i.created_by }}</a>
+                        </h5>
                     </div>
-
-                    {% comment %} FIXME <div class="col align-self-end">
-                        By <a href="{% url 'user:profile' i.created_by.pk %}" style="text-decoration:none">
-                        <img src="{{ i.created_by.userprofile.picture.url }}" alt="" style="width: 30px; height: 30px; object-fit: contain; margin-left: 10px; margin-right: 10px">
-                    {{ i.created_by }}</a>
-                    </div> {% endcomment %}
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">{{ i.difficulty }}</div>
-                    <div class="col">Attempted: {{ i.users_attempted.all.count }}</div>
-                    <div class="col">Completed: {{ i.users_completed.all.count }}</div>
-                </div>
-                <hr>
-                {{ i.questionHTML|safe }}
             </div>
         </div>
-    {% endfor %}
+        <div class="card-body">
+            <div class="row">
+                <div class="col">{{ i.difficulty }}</div>
+                <div class="col">Attempted: {{ i.users_attempted.all.count }}</div>
+                <div class="col">Completed: {{ i.users_completed.all.count }}</div>
+            </div>
+            <hr>
+            {{ i.questionHTML|safe }}
+        </div>
+    </div>
+{% endfor %}
 {% endblock content %}
