@@ -31,6 +31,7 @@
     </nav>
     <main role="main" class="container">
       {% if messages %}
+        <br>
         {% for message in messages %}<div class="alert alert-primary" role="alert">{{ message }}</div>{% endfor %}
       {% endif %}
       {% block content %}

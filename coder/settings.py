@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-jm!pr4go)dl!x#&5@v0ab-0m0^orpbx0#4e455apcbkhrfa@=!" # FIXME
+SECRET_KEY = (
+    "django-insecure-jm!pr4go)dl!x#&5@v0ab-0m0^orpbx0#4e455apcbkhrfa@=!"  # FIXME
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"] # FIXME
+ALLOWED_HOSTS = ["*"]  # FIXME
 
 # Application definition
 
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +140,6 @@ LOGIN_URL = "user:login"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
