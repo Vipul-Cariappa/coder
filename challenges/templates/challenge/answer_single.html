@@ -11,27 +11,44 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
   <script src="{% static 'meta.js' %}"></script>
+  <!-- <style>
+    .CodeMirror {
+      height: calc(100vh - 400px);
+    }
+  </style> -->
 {% endblock header %}
 {% block content %}
-  <h2>Title: {{ question.title }}</h2>
-  <p>{{ question.difficulty }}</p>
-  <p>
-    Description:
-    <br />
-    {{ question.questionHTML|safe }}
-  </p>
-  <p>My Solution:</p>
-  <textarea name="test_case" cols="40" rows="10" id="id_solution"></textarea>
-  <p>
-    {% if active_user == answer.user %}
+  <br>
+  <h1>{{ question.title }}</h1>
+  <br>
+  <div class="row">
+    <div class="col align-self-start">{{ question.difficulty }}</div>
+    <div class="col align-self-end">
+      <div class="row">
+        <div class="col align-self-start">Attempted: {{ question.users_attempted.count }}</div>
+        <div class="col align-self-end">Completed: {{ question.users_completed.count }}</div>
+      </div>
+    </div>
+  </div>
+  <p>{{ question.questionHTML|safe }}</p>
+  <h5>
+    <b>Answer By {{ answer.user }}</b>
+  </h5>
+  <textarea id="id_solution"></textarea>
+  <br>
+  {% if active_user == answer.user %}
+    <div class="btn-group" role="group" style="display: flex;">
       <a href="{% url "challenge:answer" question.id %}"
-         class="button btn btn-primary">Update</a>
-    {% endif %}
+         class="btn btn-outline-primary"
+         style="flex: 1">Update</a>
+    </div>
+  {% endif %}
+  {% comment %} <p>
+    <i>Test Cases:</i>
   </p>
-  <p>Test Cases:</p>
-  <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
+  <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea> {% endcomment %}
   <script type="text/javascript">
-  var tc_editor = new CodeMirror.fromTextArea(
+  {% comment %} var tc_editor = new CodeMirror.fromTextArea(
       document.getElementById("id_test_case"),
       {
         lineNumbers: true,
@@ -47,8 +64,7 @@
       }
     );
 
-    tc_editor.setValue("{{ question.test_case|escapejs }}");
-  
+tc_editor.setValue("{{ question.test_case|escapejs }}"); {% endcomment %}
     var s_editor = new CodeMirror.fromTextArea(
       document.getElementById("id_solution"),
       {
@@ -62,9 +78,11 @@
         autoCloseBrackets: true,
         styleActiveLine: false,
         readOnly: true,
+        linenumbers: 25,
       }
     );
 
     s_editor.setValue("{{ answer.answer|escapejs }}");
+    s_editor.setSize(null, 600);
   </script>
 {% endblock content %}

@@ -13,25 +13,47 @@
   <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
 {% block content %}
-  <h2>Title: {{ question.title }}</h2>
-  <p>{{ question.difficulty }}</p>
+  <br>
+  <h1>Title: {{ question.title }}</h1>
+  <br>
+  <div class="row">
+    <div class="col align-self-start">{{ question.difficulty }}</div>
+    <div class="col align-self-end">
+      <div class="row">
+        <div class="col align-self-start">Attempted: {{ question.users_attempted.count }}</div>
+        <div class="col align-self-end">Completed: {{ question.users_completed.count }}</div>
+      </div>
+    </div>
+  </div>
+  {% comment %} <p>
+    <i>Description:</i>
+  </p> {% endcomment %}
+  <p>{{ question.questionHTML|safe }}</p>
   <p>
-    Description:
-    <br />
-    {{ question.questionHTML|safe }}
+    <i>Test Cases:</i>
   </p>
-  <p>Users Attempted: {{ users_attempted }}</p>
-  <p>Users Completed: {{ users_completed }}</p>
-  <p>Test Cases:</p>
   <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
+  <br>
   {% if solved %}
-    <a href="{% url "challenge:answer_view" answer.id %}"
-       class="button btn btn-primary">My Solution</a>
-    <a href="{% url "challenge:list_answer" question.id %}"
-       class="button btn btn-primary">Other Solutions</a>
+    <div class="btn-group" role="group" style="display: flex;">
+      <a href="{% url "challenge:answer_view" answer.id %}"
+         class="btn btn-outline-primary"
+         style="flex: 1">My Solution</a>
+      <a href="{% url "challenge:list_answer" question.id %}"
+         class="btn btn-outline-primary"
+         style="flex: 1">Other Solutions</a>
+    </div>
   {% else %}
-    <a href="{% url "challenge:answer" question.id %}"
-       class="button btn btn-primary">Solve</a>
+    <div class="btn-group" role="group" style="display: flex;">
+      <a href="{% url "challenge:answer" question.id %}"
+         class="btn btn-outline-primary"
+         style="flex: 1">Solve</a>
+      <a class="btn btn-outline-primary"
+         style="flex: 1"
+         data-bs-toggle="tooltip"
+         data-bs-title="Unlock Other Solutions After Solving The Question"
+         disabled>Other Solutions</a>
+    </div>
   {% endif %}
   <script type="text/javascript">
   var tc_editor = new CodeMirror.fromTextArea(
