@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block header %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
         rel="stylesheet" />
@@ -13,6 +14,7 @@
   <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
 {% block content %}
+ <!-- FIXME update to monaco text editor -->
   <br />
   <div class="container">
     <div class="container">
@@ -22,11 +24,21 @@
           <br />
           <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form|crispy }}
             <button type="button" class="btn btn-primary" id="form_button">Submit</button>
           </form>
-          <div id="stdout"></div>
-          <div id="stderr" style="color: red"></div>
+          <br>Gg
+          <div class=""
+       style="min-height: 250px;
+              padding: 12px;
+              background-color: rgb(30, 30, 30);
+              color: white">
+    <p>
+      <i>Output:</i>
+    </p>
+    <div id="stdout"></div>
+    <div id="stderr" style="color: red;"></div>
+  </div>
         </div>
       </div>
     </div>
