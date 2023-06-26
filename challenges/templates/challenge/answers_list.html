@@ -1,12 +1,59 @@
 {% extends "base.html" %}
 {% load static %}
+{% block header %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
+          rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css"
+          rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
+    <script src="{% static 'meta.js' %}"></script>
+{% endblock header %}
 {% block content %}
-    <h1>questions</h1>
-    <h1>{{ question.title }}</h1>
+    <h1 style="margin: 18px">{{ question.title }}</h1>
+    <div style="font-size: 20px">{{ question.questionHTML|safe }}</div>
     {% for i in answers %}
-        <a href="{% url 'challenge:answer_view' i.id %}">
-            <h5>{{ i }}</h5>
-        </a>
-        <hr />
+        <div class="card" style="margin: 12px">
+            <div class="card-header">
+                <h4>
+                    <a href="{% url 'user:profile' i.user.pk %}"
+                       style="text-decoration:none">
+                        <img src="{{ i.user.userprofile.picture.url }}"
+                             alt=""
+                             style="width: 30px;
+                                    height: 30px;
+                                    object-fit: contain;
+                                    margin-left: 10px">
+                    </a>
+                    <a href="{% url 'challenge:answer_view' i.id %}">{{ i.user }}'s solution</a>
+                </h4>
+            </div>
+            <div class="card-body" style="margin: 0px; padding: 0px">
+                <textarea id="textarea_{{ i.id }}"></textarea>
+            </div>
+        </div>
     {% endfor %}
+    <script type="text/javascript">
+    {% for i in answers%}
+    var ta_{{ i.id }} = new CodeMirror.fromTextArea(
+    document.getElementById("textarea_{{ i.id }}"),
+    {
+      lineNumbers: true,
+      mode: "python",
+      theme: "monokai",
+      indentUnit: 4,
+      indentWithTabs: false,
+      lineWrapping: true,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      styleActiveLine: true,
+    }
+  );
+
+  ta_{{ i.id }}.setValue("{{ i.answer|escapejs }}");
+    {% endfor %}
+    </script>
 {% endblock content %}
