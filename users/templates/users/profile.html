@@ -1,29 +1,93 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <img src="/media/{{ user_profile.picture.path }}"
-         height="300"
-         width="300"
-         alt="" />
-    <p>
-        <h3>Bio</h3>
-        {{ user_profile.biography }}
-    </p>
-    {% if user == user_profile.user %}
-        <a href="{% url "users:update_profile" %}"
-           class="button btn btn-primary">Update</a>
-    {% endif %}
-    {% for i in user.answer_set.all %}
-        {% if i.tests_pass %}
+    <div class="container">
+        <br />
+        <div class="container text-center">
+            <br />
+            <img src="/media/{{ user_profile.picture.path }}"
+                 height="300"
+                 width="300"
+                 alt="User Picture"
+                 class="rounded-img" />
             <p>
-                <a href="{% url "challenge:answer_view" i.pk %}">{{ i.question.title }}</a> Difficulty: {{ i.question.difficulty }}
+                <h3>
+                    {{ user.first_name }} {{ user.last_name }}
+                </h3>
+                {{ user_profile.biography }}
             </p>
+            {% if user == user_profile.user %}
+                <a href="{% url "users:update_profile" %}"
+                   class="button btn btn-primary">Update</a>
+            {% endif %}
+        </div>
+        <br />
+        {% if user.answer_set.all %}
+            <ol class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start active"
+                    aria-current="true">
+                    <div class="ms-2 me-auto">
+                        Solved Challenges
+                    </div>
+                </li>
+                {% for i in user.answer_set.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="ms-2 me-auto">
+                            {% if i.question.difficulty == "EASY" %}
+                                <spam style="color: rgb(25, 135, 84)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% elif i.question.difficulty == "MEDIUM" %}
+                                <spam style="color: rgb(255, 193, 7)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% elif i.question.difficulty == "HARD" %}
+                                <spam style="color: rgb(220, 53, 69)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% else %}
+                                <i class="fa-solid fa-circle"></i>
+                            {% endif %}
+                            <a href="{% url "challenge:question_view" i.pk %}">{{ i.question.title }}</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ol>
+        <br />
+        {% if user.question_set.all %}
+            <ol class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start active"
+                    aria-current="true">
+                    <div class="ms-2 me-auto">
+                        Challenge Uploaded
+                    </div>
+                </li>
+                {% for i in user.question_set.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="ms-2 me-auto">
+                            {% if i.difficulty == "EASY" %}
+                                <spam style="color: rgb(25, 135, 84)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% elif i.difficulty == "MEDIUM" %}
+                                <spam style="color: rgb(255, 193, 7)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% elif i.difficulty == "HARD" %}
+                                <spam style="color: rgb(220, 53, 69)">
+                                <i class="fa-solid fa-circle"></i>
+                                </spam>
+                            {% else %}
+                                <i class="fa-solid fa-circle"></i>
+                            {% endif %}
+                            <a href="{% url "challenge:question_view" i.pk %}">{{ i.title }}</a>
+                        </div>
+                        <i class="fa-sharp fa-solid fa-check" style="padding-right: 6px"></i> Attempted: {{ i.users_attempted.count }}
+                    </li>
+                {% endfor %}
+            </ol>
         {% endif %}
-    {% endfor %}
-    <hr>
-    {% for i in user.question_set.all %}
-        <p>
-            <a href="{% url "challenge:question_view" i.pk %}">{{ i.title }}</a> Difficulty: {{ i.difficulty }}
-        </p>
-    {% endfor %}
+        <br />
+    </div>
 {% endblock content %}

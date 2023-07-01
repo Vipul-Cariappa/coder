@@ -1,50 +1,69 @@
 {% extends "base.html" %}
 {% load static %}
 {% block header %}
-<link rel="stylesheet"
-data-name="vs/editor/editor.main"
-href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/editor/editor.main.min.css">
-<script src="{% static 'meta.js' %}"></script>
+    <link rel="stylesheet"
+          data-name="vs/editor/editor.main"
+          href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/editor/editor.main.min.css" />
+    <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
 {% block content %}
-    <h1 style="margin: 18px">{{ question.title }}</h1>
-    <div style="font-size: 20px">{{ question.questionHTML|safe }}</div>
-    {% for i in answers %}
-        <div class="card" style="margin: 12px">
-            <div class="card-header">
-                <h4>
-                    <a href="{% url 'user:profile' i.user.pk %}"
-                       style="text-decoration:none">
-                        <img src="{{ i.user.userprofile.picture.url }}"
-                             alt=""
-                             style="width: 30px;
-                                    height: 30px;
-                                    object-fit: contain;
-                                    margin-left: 10px;
-                                    {% comment %} border-radius: 50%;
-                                    {% endcomment %}">
-                    </a>
-                    <a href="{% url 'challenge:answer_view' i.id %}" style="text-decoration:none">{{ i.user }}'s solution</a>
-                </h4>
-            </div>
-            <div class="card-body" style="margin: 0px; padding: 0px">
-                <div style="height: 250px; border: 2px solid black;" id="textarea_{{ i.id }}"></div>
-            </div>
+    <div class="container">
+        <h1 style="margin: 18px">
+            {{ question.title }}
+        </h1>
+        <div style="font-size: 20px">
+            {{ question.questionHTML|safe }}
         </div>
-    {% endfor %}
-    
+        {% for i in answers %}
+            <div class="card" style="margin: 12px">
+                <div class="card-header">
+                    <h4>
+                        <a href="{% url 'user:profile' i.user.pk %}"
+                           class="a-tag-remove-decoration">
+                            <img src="{{ i.user.userprofile.picture.url }}"
+                                 alt=""
+                                 style="width: 30px;
+                                        height: 30px;
+                                        margin-left: 10px;
+                                        border-radius: 50%" />
+                        </a>
+                        <a href="{% url 'challenge:answer_view' i.id %}"
+                           class="a-tag-remove-decoration">{{ i.user }}'s solution</a>
+                    </h4>
+                </div>
+                <div class="card-body" style="margin: 0px; padding: 0px">
+                    <div style="height: 250px;
+                                border: 2px solid black"
+                         id="textarea_{{ i.id }}">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br />
+{% endblock content %}
+
+{% block code %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
     <script type="text/javascript">
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
-    {% for i in answers%}
-    require(["vs/editor/editor.main"], () => {
-        monaco.editor.create(document.getElementById("textarea_{{ i.id }}"), {
-            value: "{{ i.answer|escapejs }}",
-            language: 'python',
-            theme: 'vs-dark',
-            readOnly: true,
+        require.config({
+            paths: {
+                'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+            }
         });
-      });
-    {% endfor %}
+        {
+            {% for i in answers %}
+        }
+        require(["vs/editor/editor.main"], () => {
+            monaco.editor.create(document.getElementById("textarea_{{ i.id }}"), {
+                value: "{{ i.answer|escapejs }}",
+                language: 'python',
+                theme: 'vs-light',
+                readOnly: true,
+            });
+        });
+        {
+            {% endfor %}
+        }
     </script>
-{% endblock content %}
+{% endblock code %}

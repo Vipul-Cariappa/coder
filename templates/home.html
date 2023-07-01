@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block header %}
+<style>
+    body {
+        background-image: url(/media/bg1.jpg);
+        background-position: center;
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+    <div class="container-fluid">
+        <br />
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="hero vh-100 d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h1 class="display-4 text-black">
+                            LEARN COMPETITIVE CODING AT YOUR OWN PACE.
+                        </h1>
+                        <p class="text-black">
+                            A Competitive Coding Website Built by Students for Students
+                        </p>
+                        <a href="{% url "challenge:list_question" %}" class="btn btn-primary">Get Started</a>
+ 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+{% endblock content %}

@@ -21,7 +21,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             UserProfile(biography="", user=user).save()
-            messages.success(request, f"User Created {username}!")
+            # messages.success(request, f"User Created {username}!")
             return redirect("home")
     else:
         form = SignUpForm()
@@ -54,7 +54,7 @@ def update_profile(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Updated Profile!")
+            # messages.success(request, "Updated Profile!")
             return redirect("user:profile", profile.pk)
 
     return render(

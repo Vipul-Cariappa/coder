@@ -1,6 +1,9 @@
 {% extends "base.html" %}
+
 {% load static %}
+
 {% load crispy_forms_tags %}
+
 {% block header %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
         rel="stylesheet" />
@@ -13,130 +16,138 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
   <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
+
 {% block content %}
- <!-- FIXME update to monaco text editor -->
-  <br />
   <div class="container">
+    <!-- FIXME update to monaco text editor -->
+    <br />
     <div class="container">
       <div class="container">
-        <div class="box">
-          <br />
-          <br />
-          <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <button type="button" class="btn btn-primary" id="form_button">Submit</button>
-          </form>
-          <br>Gg
-          <div class=""
-       style="min-height: 250px;
-              padding: 12px;
-              background-color: rgb(30, 30, 30);
-              color: white">
-    <p>
-      <i>Output:</i>
-    </p>
-    <div id="stdout"></div>
-    <div id="stderr" style="color: red;"></div>
-  </div>
+        <div class="container">
+          <div class="box">
+            <br />
+            <br />
+            <form method="post">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <button type="button" class="btn btn-primary" id="form_button">
+                Submit
+              </button>
+            </form>
+            <br />
+            <div class=""
+                 style="min-height: 250px;
+                        padding: 12px;
+                        background-color: rgb(30, 30, 30);
+                        color: white">
+              <p>
+                <i>Output:</i>
+              </p>
+              <div id="stdout">
+              </div>
+              <div id="stderr" style="color: red;">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <script type="text/javascript">
-  var s_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_solution"),
-    {
-      lineNumbers: true,
-      mode: "python",
-      theme: "monokai",
-      indentUnit: 4,
-      indentWithTabs: false,
-      lineWrapping: true,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      styleActiveLine: true,
-    }
-  );
-
-  var tc_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_test_case"),
-    {
-      lineNumbers: true,
-      mode: "python",
-      theme: "monokai",
-      indentUnit: 4,
-      indentWithTabs: false,
-      lineWrapping: true,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      styleActiveLine: true,
-    }
-  );
-
-  var ss_editor = new CodeMirror.fromTextArea(
-    document.getElementById("id_start_snippet"),
-    {
-      lineNumbers: true,
-      mode: "python",
-      theme: "monokai",
-      indentUnit: 4,
-      indentWithTabs: false,
-      lineWrapping: true,
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      styleActiveLine: true,
-    }
-  );
-
-  var button = document.getElementById("form_button");
-
-  button.addEventListener("click", async function () {
-    const solution = s_editor.getValue().replaceAll("\t", "    ");
-    const test_case = tc_editor.getValue().replaceAll("\t", "    ");
-    const start_snippet = ss_editor.getValue().replaceAll("\t", "    ");
-    const title = document.getElementById("id_title").value;
-    const difficulty = document.getElementById("id_difficulty").value;
-    const question = document.getElementById("id_question").value;
-
-    const csrftoken = getCookie("csrftoken");
-
-    const response = await fetch("{%  url 'challenge:new_question'  %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFTOKEN": csrftoken,
-      },
-      body: JSON.stringify({
-        solution: solution,
-        test_case: test_case,
-        title: title,
-        difficulty: difficulty,
-        question: question,
-        start_snippet: start_snippet,
-      }),
-    });
-
-    // console.log(response);
-    
-    if (response.status == 200 ) {
-      let stdout = document.getElementById("stdout");
-      let stderr = document.getElementById("stderr");
-      
-      let result = await response.json();
-      pk = result["pk"];
-
-      console.log(result);
-
-      if (result["code"] == 0) {
-        window.location.replace("/question_view/" + pk);
-      }
-
-      stdout.innerText = result["stdout"];
-      stderr.innerText = result["stderr"];
-    } else {
-      stderr.innerText = "Unexpected Error Occurred while communicating with Server."
-    }
-  });
-  </script>
+  <br />
 {% endblock content %}
+
+{% block code %}
+  <script type="text/javascript">
+      var s_editor = new CodeMirror.fromTextArea(
+          document.getElementById("id_solution"), {
+              lineNumbers: true,
+              mode: "python",
+              theme: "monokai",
+              indentUnit: 4,
+              indentWithTabs: false,
+              lineWrapping: true,
+              matchBrackets: true,
+              autoCloseBrackets: true,
+              styleActiveLine: true,
+          }
+      );
+
+      var tc_editor = new CodeMirror.fromTextArea(
+          document.getElementById("id_test_case"), {
+              lineNumbers: true,
+              mode: "python",
+              theme: "monokai",
+              indentUnit: 4,
+              indentWithTabs: false,
+              lineWrapping: true,
+              matchBrackets: true,
+              autoCloseBrackets: true,
+              styleActiveLine: true,
+          }
+      );
+
+      var ss_editor = new CodeMirror.fromTextArea(
+          document.getElementById("id_start_snippet"), {
+              lineNumbers: true,
+              mode: "python",
+              theme: "monokai",
+              indentUnit: 4,
+              indentWithTabs: false,
+              lineWrapping: true,
+              matchBrackets: true,
+              autoCloseBrackets: true,
+              styleActiveLine: true,
+          }
+      );
+
+      var button = document.getElementById("form_button");
+
+      button.addEventListener("click", async function() {
+          const solution = s_editor.getValue().replaceAll("\t", "    ");
+          const test_case = tc_editor.getValue().replaceAll("\t", "    ");
+          const start_snippet = ss_editor.getValue().replaceAll("\t", "    ");
+          const title = document.getElementById("id_title").value;
+          const difficulty = document.getElementById("id_difficulty").value;
+          const question = document.getElementById("id_question").value;
+
+          const csrftoken = getCookie("csrftoken");
+
+          const response = await fetch("{%  url 'challenge:new_question'  %}", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFTOKEN": csrftoken,
+              },
+              body: JSON.stringify({
+                  solution: solution,
+                  test_case: test_case,
+                  title: title,
+                  difficulty: difficulty,
+                  question: question,
+                  start_snippet: start_snippet,
+              }),
+          });
+
+          // console.log(response);
+
+          if (response.status == 200) {
+              let stdout = document.getElementById("stdout");
+              let stderr = document.getElementById("stderr");
+
+              let result = await response.json();
+              pk = result["pk"];
+
+              console.log(result);
+
+              if (result["code"] == 0) {
+                  window.location.replace("/question_view/" + pk);
+              }
+
+              stdout.innerText = result["stdout"];
+              stderr.innerText = result["stderr"];
+          } else {
+              stderr.innerText = "Unexpected Error Occurred while communicating with Server."
+          }
+      });
+  </script>
+{% endblock code %}

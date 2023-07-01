@@ -1,29 +1,147 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <h1 style="margin: 18px; text-align: center">Challenges</h1>
-    {% for i in questions %}
-        <div class="card" style="margin: 12px">
+    <div class="container">
+        <div class="container" style="padding-top: 18px">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-4">
+                    <h1>
+                        <i class="fa-solid fa-code"></i>
+                        Challenges
+                    </h1>
+                </div>
+                <div class="col" style="text-align: right;">
+                    <a class="btn btn-primary" href="{% url "challenge:new_question" %}">
+                        Add <i class="fa-sharp fa-solid fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% for i in questions %}
+            {% if i.difficulty == "EASY" %}
+                <div class="card border border-success" style="margin: 12px">
+                    <div class="card-header">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <div class="card-title">
+                                    <a href="{% url 'challenge:question_view' i.id %}"
+                                       class="a-tag-remove-decoration">
+                                        <h4 style="text-align: left; float: left;">
+                                            {{ i.title }}
+                                        </h4>
+                                    </a>
+                                    <h5 style="text-align: right; float: right;">
+                                        By <a href="{% url 'user:profile' i.created_by.pk %}"
+    class="a-tag-remove-decoration">
+                                        <img src="{{ i.created_by.userprofile.picture.url }}"
+                                             alt=""
+                                             style="width: 30px;
+                                                    height: 30px;
+                                                    margin-left: 10px;
+                                                    margin-right: 10px;
+                                                    border-radius: 50%" />
+                                    {{ i.created_by }}</a>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <spam style="color: rgb(25, 135, 84)">
+                            <i class="fa-solid fa-circle"></i>
+                            </spam>
+                            {{ i.difficulty }}
+                        </div>
+                        <div class="col">
+                            <i class="fa-sharp fa-solid fa-check"></i>
+                            Attempted: {{ i.users_attempted.all.count }}
+                        </div>
+                        <div class="col">
+                            <spam style="color: green;">
+                            <i class="fa-solid fa-check-double"></i>
+                            </spam>
+                            Completed: {{ i.users_completed.all.count }}
+                        </div>
+                    </div>
+                    <hr />
+                    {{ i.questionHTML|safe }}
+                </div>
+            </div>
+        {% elif i.difficulty == "MEDIUM" %}
+            <div class="card border border-warning" style="margin: 12px">
+                <div class="card-header">
+                    <div class="row justify-content-between">
+                        <div class="col">
+                            <div class="card-title">
+                                <a href="{% url 'challenge:question_view' i.id %}"
+                                   class="a-tag-remove-decoration">
+                                    <h4 style="text-align: left; float: left;">
+                                        {{ i.title }}
+                                    </h4>
+                                </a>
+                                <h5 style="text-align: right; float: right;">
+                                    By <a href="{% url 'user:profile' i.created_by.pk %}"
+    class="a-tag-remove-decoration">
+                                    <img src="{{ i.created_by.userprofile.picture.url }}"
+                                         alt=""
+                                         style="width: 30px;
+                                                height: 30px;
+                                                margin-left: 10px;
+                                                margin-right: 10px;
+                                                border-radius: 50%" />
+                                {{ i.created_by }}</a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <spam style="color: rgb(255, 193, 7)">
+                        <i class="fa-solid fa-circle"></i>
+                        </spam>
+                        {{ i.difficulty }}
+                    </div>
+                    <div class="col">
+                        <i class="fa-sharp fa-solid fa-check"></i>
+                        Attempted: {{ i.users_attempted.all.count }}
+                    </div>
+                    <div class="col">
+                        <spam style="color: green;">
+                        <i class="fa-solid fa-check-double"></i>
+                        </spam>
+                        Completed: {{ i.users_completed.all.count }}
+                    </div>
+                </div>
+                <hr />
+                {{ i.questionHTML|safe }}
+            </div>
+        </div>
+    {% elif i.difficulty == "HARD" %}
+        <div class="card border border-danger" style="margin: 12px">
             <div class="card-header">
                 <div class="row justify-content-between">
                     <div class="col">
                         <div class="card-title">
                             <a href="{% url 'challenge:question_view' i.id %}"
-                               style="text-decoration:none">
-                                <h4 style="text-align: left; float: left;">{{ i.title }}</h4>
+                               class="a-tag-remove-decoration">
+                                <h4 style="text-align: left; float: left;">
+                                    {{ i.title }}
+                                </h4>
                             </a>
                             <h5 style="text-align: right; float: right;">
                                 By <a href="{% url 'user:profile' i.created_by.pk %}"
-    style="text-decoration:none">
+    class="a-tag-remove-decoration">
                                 <img src="{{ i.created_by.userprofile.picture.url }}"
                                      alt=""
                                      style="width: 30px;
                                             height: 30px;
-                                            object-fit: contain;
                                             margin-left: 10px;
                                             margin-right: 10px;
-                                            {% comment %} border-radius: 50%;
-                                            {% endcomment %}">
+                                            border-radius: 50%" />
                             {{ i.created_by }}</a>
                         </h5>
                     </div>
@@ -32,13 +150,78 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col">{{ i.difficulty }}</div>
-                <div class="col">Attempted: {{ i.users_attempted.all.count }}</div>
-                <div class="col">Completed: {{ i.users_completed.all.count }}</div>
+                <div class="col">
+                    <spam style="color: rgb(220, 53, 69)">
+                    <i class="fa-solid fa-circle"></i>
+                    </spam>
+                    {{ i.difficulty }}
+                </div>
+                <div class="col">
+                    <i class="fa-sharp fa-solid fa-check"></i>
+                    Attempted: {{ i.users_attempted.all.count }}
+                </div>
+                <div class="col">
+                    <spam style="color: green;">
+                    <i class="fa-solid fa-check-double"></i>
+                    </spam>
+                    Completed: {{ i.users_completed.all.count }}
+                </div>
             </div>
-            <hr>
+            <hr />
             {{ i.questionHTML|safe }}
         </div>
     </div>
+{% else %}
+    <div class="card" style="margin: 12px">
+        <div class="card-header">
+            <div class="row justify-content-between">
+                <div class="col">
+                    <div class="card-title">
+                        <a href="{% url 'challenge:question_view' i.id %}"
+                           class="a-tag-remove-decoration">
+                            <h4 style="text-align: left; float: left;">
+                                {{ i.title }}
+                            </h4>
+                        </a>
+                        <h5 style="text-align: right; float: right;">
+                            By <a href="{% url 'user:profile' i.created_by.pk %}"
+    class="a-tag-remove-decoration">
+                            <img src="{{ i.created_by.userprofile.picture.url }}"
+                                 alt=""
+                                 style="width: 30px;
+                                        height: 30px;
+                                        margin-left: 10px;
+                                        margin-right: 10px;
+                                        border-radius: 50%" />
+                        {{ i.created_by }}</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <i class="fa-solid fa-circle"></i>
+                {{ i.difficulty }}
+            </div>
+            <div class="col">
+                <i class="fa-sharp fa-solid fa-check"></i>
+                Attempted: {{ i.users_attempted.all.count }}
+            </div>
+            <div class="col">
+                <spam style="color: green;">
+                <i class="fa-solid fa-check-double"></i>
+                </spam>
+                Completed: {{ i.users_completed.all.count }}
+            </div>
+        </div>
+        <hr />
+        {{ i.questionHTML|safe }}
+    </div>
+</div>
+{% endif %}
 {% endfor %}
+</div>
+<br />
 {% endblock content %}

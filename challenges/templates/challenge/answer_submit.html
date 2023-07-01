@@ -1,124 +1,140 @@
 {% extends "base.html" %}
 {% load static %}
 {% block header %}
-  <link rel="stylesheet"
-        data-name="vs/editor/editor.main"
-        href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/editor/editor.main.min.css">
-  <script src="{% static 'meta.js' %}"></script>
+    <link rel="stylesheet"
+          data-name="vs/editor/editor.main"
+          href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/editor/editor.main.min.css" />
+    <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
 {% block content %}
-  <h1>{{ question.title }}</h1>
-  <p>{{ question.questionHTML|safe }}</p>
-  <p>
-    <i>Answer:</i>
-  </p>
-  <div style="height: 400px;
-              border: 2px solid black"
-       required
-       id="id_answer"></div>
-  <p>
-    <i>Test Cases:</i>
-  </p>
-  <div style="height: 400px; border: 2px solid black;" id="id_test_case"></div>
-  <br>
-  <div class=""
-       style="min-height: 400px;
-              padding: 12px;
-              background-color: rgb(30, 30, 30);
-              color: white">
-    <p>
-      <i>Output:</i>
-    </p>
-    <div id="stdout"></div>
-    <div id="stderr" style="color: red;"></div>
-  </div>
-  <br>
-  <div class="btn-group" role="group" style="display: flex;">
-    <button type="button"
-            class="btn btn-outline-primary"
-            id="form_button"
-            style="flex: 1">Submit</button>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
-  <script type="text/javascript">
-  // var a_editor = document.getElementById("id_answer");
-  // var tc_editor = document.getElementById("id_test_case");
-
-  require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
-
-  require(["vs/editor/editor.main"], () => {
-      window.tc_editor = monaco.editor.create(document.getElementById('id_test_case'), {
-          value: "{{ question.test_case|escapejs }}",
-          language: 'python',
-          theme: 'vs-dark',
-          readOnly: true,
-      });
-      
-      {% if answer is None %}
-      window.a_editor = monaco.editor.create(document.getElementById('id_answer'), {
-        value: "{{ question.start_snippet|escapejs }}",
-        language: 'python',
-        theme: 'vs-dark',
-    });
-  {% else %}
-  window.a_editor = monaco.editor.create(document.getElementById('id_answer'), {
-        value: "{{ answer.answer|escapejs }}",
-        language: 'python',
-        theme: 'vs-dark',
-    });
-  {% endif %}
-  });
-  
-
-  {% if answer is None %}
-    var pk = -1;
-  {% else %}
-    var pk = {{answer.pk }};
-  {% endif %}
-
-  var button = document.getElementById("form_button");
-
-  button.addEventListener("click", async function () {
-    var a_editor = window.a_editor;
-    var tc_editor = window.tc_editor;
-    
-    const answer = a_editor.getValue().replaceAll("\t", "    ");
-
-    const csrftoken = getCookie("csrftoken");
-
-    const response = await fetch("{%  url 'challenge:answer' question.id  %}", {
-      method: "POST",
-      redirect: 'follow',
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFTOKEN": csrftoken,
-      },
-      body: JSON.stringify({
-        answer: answer,
-        pk: pk,
-      }),
-    });
-
-    // console.log(response);
-
-    if (response.status == 200 ) {
-      let stdout = document.getElementById("stdout");
-      let stderr = document.getElementById("stderr");
-      
-      let result = await response.json();
-      pk = result["pk"];
-
-      if (result["code"] == 0) {
-        window.location.replace("/answer_view/" + pk);
-      }
-
-      stdout.innerText = result["stdout"];
-      stderr.innerText = result["stderr"];
-    } else {
-      stderr.innerText = "Unexpected Error Occurred while communicating with Server."
-    }
-    
-  });
-  
-  </script>
+    <div class="container">
+        <h1>
+            {{ question.title }}
+        </h1>
+        <p>
+            {{ question.questionHTML|safe }}
+        </p>
+        <p>
+            <i>Answer:</i>
+        </p>
+        <div style="height: 400px;
+                    border: 2px solid black"
+             required
+             id="id_answer">
+        </div>
+        <p>
+            <i>Test Cases:</i>
+        </p>
+        <div style="height: 400px; border: 2px solid black;" id="id_test_case">
+        </div>
+        <br />
+        <div class=""
+             style="min-height: 400px;
+                    padding: 12px;
+                    background-color: rgb(30, 30, 30);
+                    color: white">
+            <p>
+                <i>Output:</i>
+            </p>
+            <div id="stdout">
+            </div>
+            <div id="stderr" style="color: red;">
+            </div>
+        </div>
+        <br />
+        <div class="btn-group" role="group" style="display: flex;">
+            <button type="button"
+                    class="btn btn-outline-primary"
+                    id="form_button"
+                    style="flex: 1">
+                Submit
+            </button>
+        </div>
+    </div>
+    <br />
 {% endblock content %}
+
+{% block code %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+    <script type="text/javascript">
+        require.config({
+            paths: {
+                'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+            }
+        });
+
+        require(["vs/editor/editor.main"], () => {
+            window.tc_editor = monaco.editor.create(document.getElementById('id_test_case'), {
+                value: "{{ question.test_case|escapejs }}",
+                language: 'python',
+                theme: 'vs-light',
+                readOnly: true,
+            });
+
+            {% if answer is None %}
+                window.a_editor = monaco.editor.create(document.getElementById('id_answer'), {
+                    value: "{{ question.start_snippet|escapejs }}",
+                    language: 'python',
+                    theme: 'vs-light',
+                });
+            {% else %}
+                window.a_editor = monaco.editor.create(document.getElementById('id_answer'), {
+                    value: "{{ answer.answer|escapejs }}",
+                    language: 'python',
+                    theme: 'vs-light',
+                });
+            {% endif %}
+        });
+
+
+        {% if answer is None %}
+            var pk = -1;
+        {% else %}
+            var pk = {{ answer.pk }};
+        {% endif %}
+
+        var button = document.getElementById("form_button");
+
+        button.addEventListener("click", async function() {
+            var a_editor = window.a_editor;
+            var tc_editor = window.tc_editor;
+
+            const answer = a_editor.getValue().replaceAll("\t", "    ");
+
+            const csrftoken = getCookie("csrftoken");
+
+            const response = await fetch("{%  url 'challenge:answer' question.id  %}", {
+                method: "POST",
+                redirect: 'follow',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFTOKEN": csrftoken,
+                },
+                body: JSON.stringify({
+                    answer: answer,
+                    pk: pk,
+                }),
+            });
+
+            // console.log(response);
+
+            if (response.status == 200) {
+                let stdout = document.getElementById("stdout");
+                let stderr = document.getElementById("stderr");
+
+                let result = await response.json();
+                pk = result["pk"];
+
+                if (result["code"] == 0) {
+                    window.location.replace("/answer_view/" + pk);
+                }
+
+                stdout.innerText = result["stdout"];
+                stderr.innerText = result["stderr"];
+            } else {
+                stderr.innerText = "Unexpected Error Occurred while communicating with Server."
+            }
+
+        });
+    </script>
+{% endblock code %}

@@ -38,7 +38,7 @@ def question_submit(request):
             )
             question.save()
 
-            messages.success(request, "Question Added Successfully")
+            # messages.success(request, "Question Added Successfully")
             return JsonResponse({"pk": question.pk, "code": 0})
 
         else:
@@ -55,6 +55,7 @@ def questions_list(request):
     return render(request, "challenge/questions_list.html", context)
 
 
+@login_required
 def question_view(request, question_id):
     active_user = request.user
 
@@ -139,10 +140,10 @@ def answer_submit(request, question_id):
                 answer_object.save()
 
             code_run_result["pk"] = answer_object.pk
-            
-            messages.success(
-                request, "Congratulations  🎉🎊\nYou have Solved the given Question"
-            )
+
+            # messages.success(
+            #     request, "Congratulations  🎉🎊\nYou have Solved the given Question"
+            # )
             return JsonResponse(code_run_result)
         else:
             # tests dont pass but save the code
@@ -160,7 +161,7 @@ def answer_submit(request, question_id):
                 answer_object.tests_pass = False
                 answer_object.save()
                 # question.users_completed.remove(active_user)
-            
+
             code_run_result["pk"] = answer_object.pk
 
             return JsonResponse(code_run_result)

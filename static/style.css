@@ -1,0 +1,12 @@
+body {
+    font-family: 'Fira Code', sans-serif;
+    background-image: linear-gradient(45deg, rgb(200, 200, 200), rgb(255, 255, 255));
+}
+
+.rounded-img {
+    border-radius: 50%;
+}
+
+.a-tag-remove-decoration {
+    text-decoration: none;
+}
