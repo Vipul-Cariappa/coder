@@ -3,11 +3,12 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import AnswerForm, QuestionForm
-from .functions import prepare_test_case, run_code, markdown
+from .functions import markdown, prepare_test_case, run_code
 from .models import Answer, Question
 
 
@@ -48,9 +49,14 @@ def question_submit(request):
 
 
 def questions_list(request):
-    context = {
-        "questions": Question.objects.filter(question_verified=True).order_by("-upload_time"),
-    }
+    questions = Question.objects.filter(question_verified=True).order_by("-upload_time")
+
+    paginator = Paginator(questions, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {"page_obj": page_obj, "page_range": paginator.page_range}
+
     return render(request, "challenge/questions_list.html", context)
 
 
@@ -79,9 +85,16 @@ def question_view(request, question_id):
 
 @login_required
 def answers_list(request, question_id):
+    answers = Answer.objects.filter(question_id=question_id).order_by("-upload_time")
+
+    paginator = Paginator(answers, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        "answers": Answer.objects.filter(question_id=question_id),
+        "page_obj": page_obj,
         "question": Question.objects.get(pk=question_id),
+        "page_range": paginator.page_range,
     }
     return render(request, "challenge/answers_list.html", context)
 

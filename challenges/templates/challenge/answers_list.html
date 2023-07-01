@@ -14,7 +14,7 @@
         <div style="font-size: 20px">
             {{ question.questionHTML|safe }}
         </div>
-        {% for i in answers %}
+        {% for i in page_obj %}
             <div class="card" style="margin: 12px">
                 <div class="card-header">
                     <h4>
@@ -39,6 +39,31 @@
                 </div>
             </div>
         {% endfor %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                    </li>
+                {% endif %}
+                {% for i in page_range %}
+                    {% if i == page_obj.number %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
     <br />
 {% endblock content %}
@@ -52,7 +77,7 @@
             }
         });
         {
-            {% for i in answers %}
+            {% for i in page_obj %}
         }
         require(["vs/editor/editor.main"], () => {
             monaco.editor.create(document.getElementById("textarea_{{ i.id }}"), {

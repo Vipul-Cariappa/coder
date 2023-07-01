@@ -44,6 +44,7 @@ class Answer(models.Model):
     answer = models.TextField()
     answer_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    upload_time = models.DateTimeField(auto_now_add=True)
     tests_pass = models.BooleanField()
 
     def __str__(self):
