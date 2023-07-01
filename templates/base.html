@@ -29,7 +29,8 @@
  
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg" style="background-color: rgb(240, 252, 220);">
+    <nav class="navbar navbar-expand-lg"
+         style="background-color: rgb(240, 252, 220)">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">
           <img src="/media/logo_black_10x.png"
@@ -58,11 +59,12 @@
           </ul>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'user:logout' %}">Logout</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'user:profile' user.pk %}">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">
                   <img src="{{ user.userprofile.picture.url }}"
                        alt="Bootstrap"
                        width="30"
@@ -70,6 +72,14 @@
                        class="rounded-img" />
                   {{ user }}
                 </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'user:profile' user.pk %}">Profile</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'user:logout' %}">Logout</a>
+                  </li>
+                </ul>
               </li>
  
             {% else %}
