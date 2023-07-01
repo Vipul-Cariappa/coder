@@ -7,48 +7,53 @@
     <script src="{% static 'meta.js' %}"></script>
 {% endblock header %}
 {% block content %}
-    <div class="container">
+    <div class="container-fluid d-flex h-100 flex-column justify-content-evenly">
         <h1>
             {{ question.title }}
         </h1>
-        <p>
-            {{ question.questionHTML|safe }}
-        </p>
-        <p>
-            <i>Answer:</i>
-        </p>
-        <div style="height: 400px;
-                    border: 2px solid black"
-             required
-             id="id_answer">
-        </div>
-        <p>
-            <i>Test Cases:</i>
-        </p>
-        <div style="height: 400px; border: 2px solid black;" id="id_test_case">
-        </div>
         <br />
-        <div class=""
-             style="min-height: 400px;
-                    padding: 12px;
-                    background-color: rgb(30, 30, 30);
-                    color: white">
-            <p>
-                <i>Output:</i>
-            </p>
-            <div id="stdout">
+        <div class="row justify-content-evenly">
+            <div class="col" style="min-width: 360px; height: 400px; overflow: auto;">
+                {{ question.questionHTML|safe }}
             </div>
-            <div id="stderr" style="color: red;">
+            <div class="col" style="min-width: 360px">
+                <div style="height: 400px; border: 2px solid black;" id="id_test_case">
+                </div>
+            </div>
+            
+        </div>
+        <div class="row" style="height: 24px;">
+        </div>
+        <div class="row justify-content-evenly">
+            <div class="col" style="min-width: 360px;" >
+                <div style="height: 440px; border: 2px solid black;" id="id_answer">
+                </div>
+            </div>
+            <div class="col" style="min-width: 360px;">
+                <div style="height: 440px; padding: 12px; border: 2px solid black; overflow: auto;">
+                    <p>
+                        <i>Output:</i>
+                    </p>
+                    <div id="stdout">
+                    </div>
+                    <div id="stderr" style="color: red;">
+                    </div>
+                </div>
             </div>
         </div>
-        <br />
-        <div class="btn-group" role="group" style="display: flex;">
-            <button type="button"
-                    class="btn btn-outline-primary"
-                    id="form_button"
-                    style="flex: 1">
-                Submit
-            </button>
+        <div class="row" style="height: 8px;">
+        </div>
+        <div class="row" style="text-align: right;">
+            <div class="col">
+                <a class="btn btn-primary" id="button_run">
+                    Run
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-primary" id="button_submit">
+                    Submit
+                </a>
+            </div>
         </div>
     </div>
     <br />
@@ -93,9 +98,9 @@
             var pk = {{ answer.pk }};
         {% endif %}
 
-        var button = document.getElementById("form_button");
+        var reload = false;
 
-        button.addEventListener("click", async function() {
+        async function button_callback() {
             var a_editor = window.a_editor;
             var tc_editor = window.tc_editor;
 
@@ -125,16 +130,35 @@
                 let result = await response.json();
                 pk = result["pk"];
 
-                if (result["code"] == 0) {
-                    window.location.replace("/answer_view/" + pk);
-                }
-
                 stdout.innerText = result["stdout"];
                 stderr.innerText = result["stderr"];
+
+                if (result["code"] == 0) {
+                    if (reload == true) {
+                        window.location.replace("/answer_view/" + pk);
+                    } else {
+                        stdout.innerText += "\nAll Tests Passed\n";
+                    }
+                }
             } else {
                 stderr.innerText = "Unexpected Error Occurred while communicating with Server."
             }
+        }
 
+        var button_submit = document.getElementById("button_submit");
+        button_submit.addEventListener("click", async function () {
+            document.getElementById("stdout").innerText = "Running ...\n";
+            document.getElementById("stderr").innerText = "";
+            reload = true;
+            await button_callback();
+        });
+        
+        var button_run = document.getElementById("button_run");
+        button_run.addEventListener("click", async function () {
+            document.getElementById("stdout").innerText = "Running ...\n";
+            document.getElementById("stderr").innerText = "";
+            reload = false;
+            await button_callback();
         });
     </script>
 {% endblock code %}
