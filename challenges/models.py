@@ -21,8 +21,12 @@ class Question(models.Model):
     )
     question_verified = models.BooleanField(default=False)
     upload_time = models.DateTimeField(auto_now_add=True)
-    users_attempted = models.ManyToManyField(User, related_name="users_attempted")
-    users_completed = models.ManyToManyField(User, related_name="users_completed")
+    users_attempted = models.ManyToManyField(
+        User, related_name="users_attempted", blank=True
+    )
+    users_completed = models.ManyToManyField(
+        User, related_name="users_completed", blank=True
+    )
     difficulty = models.CharField(
         max_length=20,
         choices=QUESTION_DIFFICULTY,

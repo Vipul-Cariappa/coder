@@ -3,6 +3,17 @@ body {
     background-image: linear-gradient(45deg, rgb(200, 200, 200), rgb(255, 255, 255));
 }
 
+pre {
+    border: 2px solid black;
+    padding: 4px;
+}
+
+blockquote {
+    background-color: rgb(180, 180, 180);
+    border-left: 4px solid grey;
+    padding: 6px;
+}
+
 .rounded-img {
     border-radius: 50%;
 }

@@ -25,6 +25,11 @@
     <hr />
     <div class="row">
       <div class="col align-self-start">
+        {% if question.question_verified == False %}
+        <spam style="color: red">
+        Question Not Verified 
+        </spam>
+        {% endif %}
         {% if question.difficulty == "EASY" %}
           <spam style="color: rgb(25, 135, 84)">
           <i class="fa-solid fa-circle"></i>

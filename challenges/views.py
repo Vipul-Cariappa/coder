@@ -5,10 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from markdown import markdown
 
 from .forms import AnswerForm, QuestionForm
-from .functions import prepare_test_case, run_code
+from .functions import prepare_test_case, run_code, markdown
 from .models import Answer, Question
 
 
@@ -50,7 +49,7 @@ def question_submit(request):
 
 def questions_list(request):
     context = {
-        "questions": Question.objects.all(),
+        "questions": Question.objects.filter(question_verified=True).order_by("-upload_time"),
     }
     return render(request, "challenge/questions_list.html", context)
 

@@ -1,3 +1,4 @@
+import pandoc
 import requests
 
 URL = "https://emkc.org/api/v2/piston/execute"
@@ -32,5 +33,5 @@ def prepare_test_case(test_case):
     return "from main import *;" + test_case
 
 
-if __name__ == "__main__":
-    run_code("", "")
+def markdown(source: str) -> str:
+    return pandoc.write(pandoc.read(source=source), format="html")
