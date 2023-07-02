@@ -269,3 +269,7 @@ pyrightconfig.json
 # User Defined
 .vscode/
 *tmp*
+
+# server related files
+server_db.cnf
+server_info.json
