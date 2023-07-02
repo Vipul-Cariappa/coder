@@ -1,3 +1,4 @@
+- Vipul Cariappa (Vipul-Cariappa)
 - Ravi Kamath (ravikamath123)
 - Vaidehi Adhi (vaidehiadhi)
 - Karthik Ambekar (Kartik-Ambekar)
