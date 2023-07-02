@@ -1,2 +1,3 @@
-vaidehi vaidehiadhi2003@gmail.com
-Kartik Ambekar kartikambekar.11@gmail.com
+- Ravi Kamath (ravikamath123)
+- Vaidehi Adhi (vaidehiadhi)
+- Karthik Ambekar (Kartik-Ambekar)
