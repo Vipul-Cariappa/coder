@@ -20,12 +20,12 @@ CREATE DATABASE <database-name> CHARACTER SET utf8;
 
 ## Move DataBases!?
 
-> Not Do this But
+> Do Not Do This But
 
-Store data in a json file
+Store data in a JSON file
 
 ```bash
-
+python manage.py dumpdata > data.json
 ```
 
 Load data
