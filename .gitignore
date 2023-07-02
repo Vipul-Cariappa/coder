@@ -272,3 +272,4 @@ pyrightconfig.json
 
 # server related files
 server_db.cnf
+server_info.json

@@ -1,0 +1,10 @@
+{
+  "ALLOWED_HOSTS": ["*"],
+  "SECRET_KEY": "django-insecure-jm!pr4go)dl!x#&5@v0ab-0m0^orpbx0#4e455apcbkhrfa@=!",
+  "DEBUG": true,
+  "DATABASE": "sqlite",
+  "STATIC_ROOT": "",
+  "MEDIA_ROOT": "",
+  "HOST_EMAIL": "",
+  "HOST_EMAIL_PASSWORD": ""
+}
