@@ -22,7 +22,7 @@
             {% endif %}
         </div>
         <br />
-        {% if user.answer_set.all %}
+        {% if user_profile.user.answer_set.all %}
             <ol class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-start active"
                     aria-current="true">
@@ -30,7 +30,7 @@
                         Solved Challenges
                     </div>
                 </li>
-                {% for i in user.answer_set.all %}
+                {% for i in user_profile.user.answer_set.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="ms-2 me-auto">
                             {% if i.question.difficulty == "EASY" %}
@@ -55,7 +55,7 @@
             {% endif %}
         </ol>
         <br />
-        {% if user.question_set.all %}
+        {% if user_profile.user.question_set.all %}
             <ol class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-start active"
                     aria-current="true">
@@ -63,7 +63,7 @@
                         Challenge Uploaded
                     </div>
                 </li>
-                {% for i in user.question_set.all %}
+                {% for i in user_profile.user.question_set.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="ms-2 me-auto">
                             {% if i.question_verified == True %}
