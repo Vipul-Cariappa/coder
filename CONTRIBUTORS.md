@@ -1,2 +1,4 @@
-vaidehi vaidehiadhi2003@gmail.com
-Kartik Ambekar kartikambekar.11@gmail.com
+- Vipul Cariappa (Vipul-Cariappa)
+- Ravi Kamath (ravikamath123)
+- Vaidehi Adhi (vaidehiadhi)
+- Karthik Ambekar (Kartik-Ambekar)
