@@ -85,7 +85,9 @@ def question_view(request, question_id):
 
 @login_required
 def answers_list(request, question_id):
-    answers = Answer.objects.filter(question_id=question_id).order_by("-upload_time")
+    answers = Answer.objects.filter(question_id=question_id, tests_pass=True).order_by(
+        "-upload_time"
+    )
 
     paginator = Paginator(answers, 10)
     page_number = request.GET.get("page")
