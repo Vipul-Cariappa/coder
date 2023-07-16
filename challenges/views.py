@@ -103,17 +103,24 @@ def answers_list(request, question_id):
 
 @login_required
 def answer_view(request, answer_id):
+    active_user = request.user
+    
     answer = get_object_or_404(Answer, pk=answer_id)
     question = get_object_or_404(Question, pk=answer.question.pk)
-    return render(
-        request,
-        "challenge/answer_single.html",
-        {
-            "answer": answer,
-            "question": question,
-            "active_user": request.user,
-        },
-    )
+    
+    if (question.users_completed.contains(active_user)):
+        return render(
+            request,
+            "challenge/answer_single.html",
+            {
+                "answer": answer,
+                "question": question,
+                "active_user": request.user,
+            },
+        )
+    
+    # messages.info("You need to answer the question to look at the answer")
+    return redirect("challenge:question_view", question.pk)
 
 
 @login_required
@@ -161,6 +168,8 @@ def answer_submit(request, question_id):
             return JsonResponse(code_run_result)
         else:
             # tests dont pass but save the code
+            question.users_completed.remove(active_user)
+            
             if pk == -1:
                 # create new answer
                 answer_object = Answer(
@@ -174,7 +183,6 @@ def answer_submit(request, question_id):
                 answer_object.answer = answer
                 answer_object.tests_pass = False
                 answer_object.save()
-                question.users_completed.remove(active_user)
 
             code_run_result["pk"] = answer_object.pk
 
