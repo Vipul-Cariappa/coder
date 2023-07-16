@@ -21,3 +21,27 @@ blockquote {
 .a-tag-remove-decoration {
     text-decoration: none;
 }
+
+#msg-hide {
+    -moz-animation: hide-animation 0s ease-in 5s forwards; /* Firefox */
+    -webkit-animation: hide-animation 0s ease-in 5s forwards; /* Safari and Chrome */
+    -o-animation: hide-animation 0s ease-in 5s forwards; /* Opera */
+    animation: hide-animation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes hide-animation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes hide-animation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}

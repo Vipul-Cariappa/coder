@@ -92,6 +92,17 @@
       </div>
     </nav>
 
+    {% if messages %}
+      <br />
+      <div class="container" id="msg-hide">
+        {% for message in messages %}
+          <div class="alert alert-primary" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% block content %}
     {% endblock content %}
  

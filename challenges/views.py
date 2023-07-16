@@ -38,7 +38,7 @@ def question_submit(request):
             )
             question.save()
 
-            # messages.success(request, "Question Added Successfully")
+            messages.success(request, "Question Added Successfully")
             return JsonResponse({"pk": question.pk, "code": 0})
 
         else:
@@ -104,11 +104,11 @@ def answers_list(request, question_id):
 @login_required
 def answer_view(request, answer_id):
     active_user = request.user
-    
+
     answer = get_object_or_404(Answer, pk=answer_id)
     question = get_object_or_404(Question, pk=answer.question.pk)
-    
-    if (question.users_completed.contains(active_user)):
+
+    if question.users_completed.contains(active_user):
         return render(
             request,
             "challenge/answer_single.html",
@@ -118,8 +118,10 @@ def answer_view(request, answer_id):
                 "active_user": request.user,
             },
         )
-    
-    # messages.info("You need to answer the question to look at the answer")
+
+    messages.info(
+        request, "You need to answer the question first to look at the other answer"
+    )
     return redirect("challenge:question_view", question.pk)
 
 
@@ -162,14 +164,15 @@ def answer_submit(request, question_id):
 
             code_run_result["pk"] = answer_object.pk
 
-            # messages.success(
-            #     request, "Congratulations  🎉🎊\nYou have Solved the given Question"
-            # )
+            if post["redirect"]:
+                messages.success(
+                    request, "Congratulations  🎉🎊\nYou have Solved the given Question"
+                )
             return JsonResponse(code_run_result)
         else:
             # tests dont pass but save the code
             question.users_completed.remove(active_user)
-            
+
             if pk == -1:
                 # create new answer
                 answer_object = Answer(
