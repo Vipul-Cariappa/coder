@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %}
+Answers of {{ question.title }} | Code Turing
+{% endblock title %}
+
+{% block description %}
+All the avaiable solutions to the programming challenge {{ question.title }}
+{% endblock description %}
+
 {% block header %}
     <link rel="stylesheet"
           data-name="vs/editor/editor.main"
