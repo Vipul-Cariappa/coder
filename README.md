@@ -1,6 +1,6 @@
 # Code Turing
 
-Code Turing aims to be a website where people can learn how to program. It is similar to a competative programming website. But need not be limited to it. I have many ideas in my mind for this.
+Code Turing aims to be a website where people can learn how to program. It is similar to a competitive programming website. But need not be limited to it. I have many ideas in my mind for this.
 
 You can find the deployed site at https://codeturing.in/.
 
@@ -25,9 +25,9 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-This project uses `server_info.json` file to configurations. If you want to test it with different configurations like changing the database, edit the `info.json` and rename it to `server_info.json`.
+This project uses `server_info.json` file for configurations. If you want to test it with different configurations like changing the database, edit the `info.json` and rename it to `server_info.json`.
 
-Use `db.cnf` to configure the database you want to use. Rename `db.cnf` to `server_db.cnf` after you are done with your edits. By default this project uses sqlite database while developing. And MariaDB in production.
+Use `db.cnf` to configure the database you want to use. Rename `db.cnf` to `server_db.cnf` after you are done with your edits. By default, this project uses SQLite database while developing. And MariaDB in production.
 
 
 Using `black` and `djlint` for formatting.
