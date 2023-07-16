@@ -172,7 +172,7 @@ def answer_submit(request, question_id):
                 answer_object.answer = answer
                 answer_object.tests_pass = False
                 answer_object.save()
-                # question.users_completed.remove(active_user)
+                question.users_completed.remove(active_user)
 
             code_run_result["pk"] = answer_object.pk
 
