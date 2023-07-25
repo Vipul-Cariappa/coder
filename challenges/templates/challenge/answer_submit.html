@@ -104,7 +104,7 @@
             var a_editor = window.a_editor;
             var tc_editor = window.tc_editor;
 
-            const answer = a_editor.getValue().replaceAll("\t", "    ");
+            const answer = a_editor.getValue();
 
             const csrftoken = getCookie("csrftoken");
 
@@ -118,6 +118,7 @@
                 body: JSON.stringify({
                     answer: answer,
                     pk: pk,
+                    redirect: reload,
                 }),
             });
 

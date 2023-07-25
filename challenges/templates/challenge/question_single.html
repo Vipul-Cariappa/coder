@@ -12,13 +12,6 @@
 {% block content %}
   <div class="container">
     <br />
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-primary" role="alert">
-          {{ message }}
-        </div>
-      {% endfor %}
-    {% endif %}
     <h1>
       Title: {{ question.title }}
     </h1>

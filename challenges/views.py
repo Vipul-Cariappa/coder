@@ -38,7 +38,7 @@ def question_submit(request):
             )
             question.save()
 
-            # messages.success(request, "Question Added Successfully")
+            messages.success(request, "Question Added Successfully")
             return JsonResponse({"pk": question.pk, "code": 0})
 
         else:
@@ -85,7 +85,9 @@ def question_view(request, question_id):
 
 @login_required
 def answers_list(request, question_id):
-    answers = Answer.objects.filter(question_id=question_id).order_by("-upload_time")
+    answers = Answer.objects.filter(question_id=question_id, tests_pass=True).order_by(
+        "-upload_time"
+    )
 
     paginator = Paginator(answers, 10)
     page_number = request.GET.get("page")
@@ -101,17 +103,26 @@ def answers_list(request, question_id):
 
 @login_required
 def answer_view(request, answer_id):
+    active_user = request.user
+
     answer = get_object_or_404(Answer, pk=answer_id)
     question = get_object_or_404(Question, pk=answer.question.pk)
-    return render(
-        request,
-        "challenge/answer_single.html",
-        {
-            "answer": answer,
-            "question": question,
-            "active_user": request.user,
-        },
+
+    if question.users_completed.contains(active_user):
+        return render(
+            request,
+            "challenge/answer_single.html",
+            {
+                "answer": answer,
+                "question": question,
+                "active_user": request.user,
+            },
+        )
+
+    messages.info(
+        request, "You need to answer the question first to look at the other answer"
     )
+    return redirect("challenge:question_view", question.pk)
 
 
 @login_required
@@ -153,12 +164,15 @@ def answer_submit(request, question_id):
 
             code_run_result["pk"] = answer_object.pk
 
-            # messages.success(
-            #     request, "Congratulations  🎉🎊\nYou have Solved the given Question"
-            # )
+            if post["redirect"]:
+                messages.success(
+                    request, "Congratulations  🎉🎊\nYou have Solved the given Question"
+                )
             return JsonResponse(code_run_result)
         else:
             # tests dont pass but save the code
+            question.users_completed.remove(active_user)
+
             if pk == -1:
                 # create new answer
                 answer_object = Answer(
@@ -172,7 +186,6 @@ def answer_submit(request, question_id):
                 answer_object.answer = answer
                 answer_object.tests_pass = False
                 answer_object.save()
-                # question.users_completed.remove(active_user)
 
             code_run_result["pk"] = answer_object.pk
 
