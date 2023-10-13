@@ -6,7 +6,7 @@ Django==4.2.3
 django-crispy-forms==2.0
 idna==3.4
 pandoc==2.3
-Pillow==9.5.0
+Pillow==10.0.1
 plumbum==1.8.2
 ply==3.11
 requests==2.31.0
