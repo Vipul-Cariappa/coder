@@ -48,8 +48,13 @@ def question_submit(request):
     return render(request, "challenge/question_submit.html", {"form": form})
 
 
-def questions_list(request):
+def questions_list(request, difficulty=None):
     questions = Question.objects.filter(question_verified=True).order_by("-upload_time")
+    if not (difficulty is None):
+        try:
+            questions = questions.filter(difficulty=difficulty)
+        except:
+            pass
 
     paginator = Paginator(questions, 10)
     page_number = request.GET.get("page")
