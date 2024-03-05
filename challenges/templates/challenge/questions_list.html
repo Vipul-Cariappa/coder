@@ -110,6 +110,12 @@
                             </spam>
                             Completed: {{ i.users_completed.all.count }}
                         </div>
+                        <div class="col">
+                            <spam style="color: red;">
+                            <i class="fa-solid fa-heart"></i>
+                            </spam>
+                            Likes: {{ i.likes.all.count }}
+                        </div>
                     </div>
                     <hr />
                     {{ i.questionHTML|safe }}
@@ -161,6 +167,12 @@
                         </spam>
                         Completed: {{ i.users_completed.all.count }}
                     </div>
+                    <div class="col">
+                        <spam style="color: red;">
+                        <i class="fa-solid fa-heart"></i>
+                        </spam>
+                        Likes: {{ i.likes.all.count }}
+                    </div>
                 </div>
                 <hr />
                 {{ i.questionHTML|safe }}
@@ -211,6 +223,12 @@
                     <i class="fa-solid fa-check-double"></i>
                     </spam>
                     Completed: {{ i.users_completed.all.count }}
+                </div>
+                <div class="col">
+                    <spam style="color: red;">
+                    <i class="fa-solid fa-heart"></i>
+                    </spam>
+                    Likes: {{ i.likes.all.count }}
                 </div>
             </div>
             <hr />

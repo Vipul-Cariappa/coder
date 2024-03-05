@@ -52,6 +52,14 @@
             </spam>
             Completed: {{ question.users_completed.count }}
           </div>
+          <div class="col">
+            <a href="{% url "challenge:question_like" question.id %}">
+              <spam style="color: red;">
+              <i class="fa-solid fa-heart"></i>
+              </spam>
+              Likes: {{ question.likes.all.count }}
+            </a>
+        </div>
         </div>
       </div>
     </div>
@@ -91,6 +99,21 @@
       </div>
     {% endif %}
   </div>
+  {% for i in comments %}
+  <!-- TODO: style the comments-->
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title">{{ i.user.username }}</h5>
+      <p class="card-text">{{ i.message|safe }}</p>
+    </div>
+  </div>
+  {% endfor %}
+  <form action="{% url "challenge:question_comment" question.id %}" method="post">
+    <!-- TODO: style the comment post form -->
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit" value="Submit">
+  </form>
   <br />
 {% endblock content %}
 

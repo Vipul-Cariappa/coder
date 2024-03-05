@@ -34,6 +34,7 @@ class Question(models.Model):
         null=False,
         blank=False,
     )
+    likes = models.ManyToManyField(User, related_name="users_liked_questions", blank=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -46,6 +47,21 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     upload_time = models.DateTimeField(auto_now_add=True)
     tests_pass = models.BooleanField()
+    likes = models.ManyToManyField(User, related_name="users_liked_answers", blank=True)
 
     def __str__(self):
         return f"{self.question.title} by {self.user.username}"
+
+
+class QuestionComments(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    post_time = models.DateTimeField(auto_now_add=True)
+
+
+class AnswerComments(models.Model):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    post_time = models.DateTimeField(auto_now_add=True)
