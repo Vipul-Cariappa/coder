@@ -2,6 +2,14 @@
 
 {% load static %}
 
+{% block title %}
+{{ question.title }} | Code Turing
+{% endblock title %}
+
+{% block description %}
+Programming Challenge {{ question.title }}
+{% endblock description %}
+
 {% block header %}
   <link rel="stylesheet"
         data-name="vs/editor/editor.main"
