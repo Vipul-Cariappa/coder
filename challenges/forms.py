@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Answer, Question
+from .models import Answer, Question, AnswerComments, QuestionComments
 
 
 class QuestionForm(forms.ModelForm):
@@ -28,3 +28,15 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ("answer",)
+
+
+class QuestionCommentForm(forms.ModelForm):
+    class Meta:
+        model = QuestionComments
+        fields = ("message",)
+
+
+class AnswerCommentForm(forms.ModelForm):
+    class Meta:
+        model = AnswerComments
+        fields = ("message",)

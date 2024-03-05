@@ -8,9 +8,9 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
-from .forms import AnswerForm, QuestionForm
+from .forms import AnswerForm, QuestionForm, AnswerCommentForm, QuestionCommentForm
 from .functions import markdown, prepare_test_case, run_code
-from .models import Answer, Question
+from .models import Answer, Question, AnswerComments, QuestionComments
 
 
 # Create your views here.
@@ -86,7 +86,26 @@ def question_view(request, question_id):
     else:
         context["solved"] = False
 
+    context["comments"] = QuestionComments.objects.filter(question__pk=question_id).order_by("post_time")
+    context["comment_form"] = QuestionCommentForm()
+
     return render(request, "challenge/question_single.html", context)
+
+
+@require_http_methods(["POST"])
+@login_required
+def question_post_comment(request, question_id):
+    active_user = request.user
+    question = get_object_or_404(Question, pk=question_id)
+    form = QuestionCommentForm(request.POST)
+    if form.is_valid():
+        comment = QuestionComments(
+            message=markdown(form.cleaned_data["message"]),
+            user=active_user,
+            question=question
+        )
+        comment.save()
+    return redirect("challenge:question_view", question.pk)
 
 
 @login_required
@@ -131,6 +150,8 @@ def answer_view(request, answer_id):
                 "answer": answer,
                 "question": question,
                 "active_user": request.user,
+                "comment_form": AnswerCommentForm(),
+                "comments": AnswerComments.objects.filter(answer__pk=answer_id).order_by("post_time"),
             },
         )
 
@@ -215,6 +236,23 @@ def answer_submit(request, question_id):
         context["answer"] = None
 
     return render(request, "challenge/answer_submit.html", context)
+
+
+@require_http_methods(["POST"])
+@login_required
+def answer_post_comment(request, answer_id):
+    print("YES ANSWER POST COMMENT")
+    active_user = request.user
+    answer = get_object_or_404(Answer, pk=answer_id)
+    form = AnswerCommentForm(request.POST)
+    if form.is_valid():
+        comment = AnswerComments(
+            message=markdown(form.cleaned_data["message"]),
+            user=active_user,
+            answer=answer
+        )
+        comment.save()
+    return redirect("challenge:answer_view", answer.pk)
 
 
 @login_required

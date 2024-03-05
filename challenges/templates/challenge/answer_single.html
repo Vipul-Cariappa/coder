@@ -81,6 +81,21 @@
     <textarea name="test_case" cols="40" rows="10" id="id_test_case"></textarea>
             -->
   </div>
+  {% for i in comments %}
+    <!-- TODO: style the comments-->
+    <div class="card">
+        <div class="card-body">
+        <h3 class="card-title">{{ i.user.username }}</h5>
+        <p class="card-text">{{ i.message|safe }}</p>
+        </div>
+    </div>
+  {% endfor %}
+  <form action="{% url "challenge:answer_comment" answer.id %}" method="post">
+      <!-- TODO: style the comment post form -->
+      {% csrf_token %}
+      {{ comment_form }}
+      <input type="submit" value="Submit">
+  </form>
   <br />
 {% endblock content %}
 
