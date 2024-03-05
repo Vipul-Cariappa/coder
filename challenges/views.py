@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_http_methods
 
 from .forms import AnswerForm, QuestionForm
 from .functions import markdown, prepare_test_case, run_code
@@ -48,8 +49,13 @@ def question_submit(request):
     return render(request, "challenge/question_submit.html", {"form": form})
 
 
-def questions_list(request):
+def questions_list(request, difficulty=None):
     questions = Question.objects.filter(question_verified=True).order_by("-upload_time")
+    if not (difficulty is None):
+        try:
+            questions = questions.filter(difficulty=difficulty)
+        except:
+            pass
 
     paginator = Paginator(questions, 10)
     page_number = request.GET.get("page")
@@ -81,6 +87,15 @@ def question_view(request, question_id):
         context["solved"] = False
 
     return render(request, "challenge/question_single.html", context)
+
+
+@login_required
+def question_like(request, question_id):
+    active_user = request.user
+    question = get_object_or_404(Question, pk=question_id)
+    question.likes.add(active_user)
+    question.save()
+    return redirect("challenge:question_view", question.pk)
 
 
 @login_required
@@ -200,3 +215,12 @@ def answer_submit(request, question_id):
         context["answer"] = None
 
     return render(request, "challenge/answer_submit.html", context)
+
+
+@login_required
+def answer_like(request, answer_id):
+    active_user = request.user
+    answer = get_object_or_404(Answer, pk=answer_id)
+    answer.likes.add(active_user)
+    answer.save()
+    return redirect("challenge:answer_view", answer.pk)

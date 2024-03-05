@@ -44,6 +44,15 @@
             </spam>
             Completed: {{ question.users_completed.count }}
           </div>
+          <!-- TODO: improve UI here -->
+          <div class="col">
+            <a href="{% url "challenge:answer_like" answer.id %}">
+              <spam style="color: red;">
+              <i class="fa-solid fa-heart"></i>
+              </spam>
+              Likes: {{ answer.likes.all.count }}
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -47,6 +47,16 @@
                     </h1>
                 </div>
                 <div class="col" style="text-align: right;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Difficulty
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url "challenge:list_question_difficulty" 'EASY' %}">EASY</a>
+                            <a class="dropdown-item" href="{% url "challenge:list_question_difficulty" 'MEDIUM' %}">MEDIUM</a>
+                            <a class="dropdown-item" href="{% url "challenge:list_question_difficulty" 'HARD' %}">HARD</a>
+                        </div>
+                    </div>
                     <a class="btn btn-primary" href="{% url "challenge:new_question" %}">
                         Add <i class="fa-sharp fa-solid fa-plus"></i>
                     </a>
@@ -100,6 +110,12 @@
                             </spam>
                             Completed: {{ i.users_completed.all.count }}
                         </div>
+                        <div class="col">
+                            <spam style="color: red;">
+                            <i class="fa-solid fa-heart"></i>
+                            </spam>
+                            Likes: {{ i.likes.all.count }}
+                        </div>
                     </div>
                     <hr />
                     {{ i.questionHTML|safe }}
@@ -151,6 +167,12 @@
                         </spam>
                         Completed: {{ i.users_completed.all.count }}
                     </div>
+                    <div class="col">
+                        <spam style="color: red;">
+                        <i class="fa-solid fa-heart"></i>
+                        </spam>
+                        Likes: {{ i.likes.all.count }}
+                    </div>
                 </div>
                 <hr />
                 {{ i.questionHTML|safe }}
@@ -201,6 +223,12 @@
                     <i class="fa-solid fa-check-double"></i>
                     </spam>
                     Completed: {{ i.users_completed.all.count }}
+                </div>
+                <div class="col">
+                    <spam style="color: red;">
+                    <i class="fa-solid fa-heart"></i>
+                    </spam>
+                    Likes: {{ i.likes.all.count }}
                 </div>
             </div>
             <hr />
