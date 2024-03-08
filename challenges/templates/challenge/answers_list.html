@@ -30,7 +30,7 @@
                         <a href="{% url 'challenge:answer_view' i.id %}"
                            class="a-tag-remove-decoration">{{ i.user }}'s solution</a>
                         <!-- TODO: the below spam should be styled -->
-                        <spam style="color: green;">&nbsp;
+                        <spam style="color: green;">
                           <i class="fa-regular fa-thumbs-up icon"></i>
                         </spam>{{ i.likes.all.count }}
                     </h4>

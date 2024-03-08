@@ -8,56 +8,19 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/editor/editor.main.min.css" />
   <script src="{% static 'meta.js' %}"></script>
   <style>
-    .col a {
+    .mycol a {
       text-decoration: none;
-      display: inline-block;
     }
     .icon{
       transition: transform 0.2s;
     }
     .icon:hover{
-      transform: scale(1.5);
+      transform: scale(1.3);
     }
     .icon:active{
       transform: scale(0.8);
     }
-    .card {
-      border: 1px solid #ddd; 
-      border-radius: 10px; 
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
-      padding: 15px; 
-      margin-top: 20px;
-    }
-  
-    .card-body {
-      padding: 10px;
-    }
-  
-    .card-title {
-      color: #333; 
-      margin-bottom: 10px; 
-      font-size: 1.5rem; 
-      font-weight: bold;
-    }
-  
-    .card-text {
-      color: #555;  
-      font-size: 1.2rem;  
-      line-height: 1.5;
-    }
-    form {
-      margin-top: 20px;
-    }
-    
-    input[type="text"] {
-      width: 100%; 
-      padding: 10px; 
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px; 
-      box-sizing: border-box; 
-    }
-  
+
     .submit{
       padding: 5px;
       border: none;
@@ -66,7 +29,6 @@
       background-color: rgb(113, 242, 133);
       border-radius: 15px;
     }
-
   </style>
 {% endblock header %}
 
@@ -113,11 +75,10 @@
             </spam>
             Completed: {{ question.users_completed.count }}
           </div>
-          <div class="col">
+          <div class="col icon mycol">
             <a href="{% url "challenge:question_like" question.id %}">
-              <!-- TODO: the below spam should be styled -->
               <spam style="color: green">
-              <i class="fa-regular fa-thumbs-up icon"></i>
+              <i class="fa-regular fa-thumbs-up"></i>
               </spam>
               Likes: {{ question.likes.all.count }}
             </a>
@@ -162,28 +123,30 @@
     {% endif %}
   
   {% for i in comments %}
-  <!-- TODO: style the comments-->
-  <div class="card">
-    <div class="card-body">
-      <h3 class="card-title"><img src="{{ i.created_by.userprofile.picture.url }}"
-        alt=""
-        style="width: 30px;
-               height: 30px;
-               margin-left: 10px;
-               margin-right: 10px;
-               border-radius: 50%" />{{ i.user.username }}</h3>
-        <hr>
-      <p class="card-text">{{ i.message|safe }}</p>
+  <div class="row" style="margin-top: 20px;">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title"><img src="{{ i.user.userprofile.picture.url }}"
+          alt=""
+          style="width: 30px;
+                height: 30px;
+                margin-left: 10px;
+                margin-right: 10px;
+                border-radius: 50%" />{{ i.user.username }}</h3>
+          <hr>
+        <p class="card-text">{{ i.message|safe }}</p>
+      </div>
     </div>
   </div>
   {% endfor %}
-  <form action="{% url "challenge:question_comment" question.id %}" method="post">
-    <!-- TODO: style the comment post form -->
-    {% csrf_token %}
-    <h4>Message:</h4>
-      <textarea name="message" cols = "100%" rows="5" required="" id="id_message"></textarea>
+  <div class="row" style="margin-top: 20px;">
+    <form action="{% url "challenge:question_comment" question.id %}" method="post">
+      {% csrf_token %}
+      <h4>Message:</h4>
+      <textarea style="width: 100%;" name="message" rows="5" required="" id="id_message"></textarea>
       <button class="submit"><i class="fa-solid fa-paper-plane"></i></button>
-  </form>
+    </form>
+  </div>
 </div>
   <br />
 {% endblock content %}
