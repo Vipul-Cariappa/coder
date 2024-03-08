@@ -30,9 +30,9 @@
                         <a href="{% url 'challenge:answer_view' i.id %}"
                            class="a-tag-remove-decoration">{{ i.user }}'s solution</a>
                         <!-- TODO: the below spam should be styled -->
-                        <spam style="color: red;">
-                          <i class="fa-solid fa-heart"></i>
-                        </spam>Likes: {{ i.likes.all.count }}
+                        <spam style="color: green;">&nbsp;
+                          <i class="fa-regular fa-thumbs-up icon"></i>
+                        </spam>{{ i.likes.all.count }}
                     </h4>
                 </div>
                 <div class="card-body" style="margin: 0px; padding: 0px">
