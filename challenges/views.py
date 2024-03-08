@@ -112,7 +112,10 @@ def question_post_comment(request, question_id):
 def question_like(request, question_id):
     active_user = request.user
     question = get_object_or_404(Question, pk=question_id)
-    question.likes.add(active_user)
+    if question.likes.contains(active_user):
+        question.likes.remove(active_user)
+    else:
+        question.likes.add(active_user)
     question.save()
     return redirect("challenge:question_view", question.pk)
 
@@ -259,6 +262,9 @@ def answer_post_comment(request, answer_id):
 def answer_like(request, answer_id):
     active_user = request.user
     answer = get_object_or_404(Answer, pk=answer_id)
-    answer.likes.add(active_user)
+    if answer.likes.contains(active_user):
+        answer.likes.remove(active_user)
+    else:
+        answer.likes.add(active_user)
     answer.save()
     return redirect("challenge:answer_view", answer.pk)
