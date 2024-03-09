@@ -30,7 +30,7 @@ def run_code(solution, test_case):
 
 
 def prepare_test_case(test_case):
-    return "from main import *;" + test_case
+    return "from main import *\n" + test_case
 
 
 def markdown(source: str) -> str:
