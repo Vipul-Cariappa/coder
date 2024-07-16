@@ -14,5 +14,5 @@ ply==3.11
 requests==2.31.0
 sqlparse==0.4.4
 typing_extensions==4.7.0
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
 urllib3==2.0.6
