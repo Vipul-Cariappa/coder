@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %}
+{{ user_profile.user }} | Code Turing
+{% endblock title %}
+
+{% block description %}
+User Profile
+{% endblock description %}
+
 {% block content %}
     <div class="container">
         <br />
