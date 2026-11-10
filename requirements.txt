@@ -5,10 +5,11 @@ crispy-bootstrap5==2026.9
 Django==5.2.19
 django-crispy-forms==2.7
 idna==3.20
-pandoc==2.4
+markdown-it-py==4.2.0
+mdurl==0.1.2
+nh3==0.3.7
 Pillow==13.0.0
-plumbum==2.0.2
-ply==3.11
+Pygments==2.21.0
 requests==2.34.2
 sqlparse==0.6.1
 urllib3==2.8.0

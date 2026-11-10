@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load markdown_extras %}
 {% load static %}
 
 {% block header %}
@@ -91,7 +92,7 @@
       <i>Description:</i>
     </p>
     <p>
-      {{ question.questionHTML|safe }}
+      {{ question.questionHTML|safe_html }}
     </p>
     <br />
     <p>
@@ -134,7 +135,7 @@
                 margin-right: 10px;
                 border-radius: 50%" />{{ i.user.username }}</h3>
           <hr>
-        <p class="card-text">{{ i.message|safe }}</p>
+        <p class="card-text">{{ i.message|safe_html }}</p>
       </div>
     </div>
   </div>

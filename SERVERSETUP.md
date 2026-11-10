@@ -34,12 +34,6 @@ Load data
 python manage.py loaddata data.json
 ```
 
-## Install pandoc
-
-```bash
-sudo apt-get install pandoc -y
-```
-
 ## Using letsencrypt
 
 Install dependency

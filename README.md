@@ -8,12 +8,10 @@ Code Turing name is derived from Alan Turing. One of the greatest minds in the f
 
 ## Install instructions for development
 
-Requires Python 3.10 or newer (tested on 3.14) and Django 5.2 LTS.
-
-Install the `pandoc` binary from [here](https://github.com/jgm/pandoc/releases). The
-`pandoc` Python package (2.4) knows the document models up to pandoc **3.2.1**, so use a
-release at or below that — a newer binary only prints a warning and is treated as 3.2.1,
-which is not guaranteed to be correct.
+Requires Python 3.10 or newer (tested on 3.14) and Django 5.2 LTS. There are no
+external binaries to install — markdown is rendered in-process by `markdown-it-py`,
+code blocks are highlighted by `Pygments`, and the resulting HTML is sanitized with
+`nh3` before it is stored and again before it is displayed.
 
 fork the repository first
 

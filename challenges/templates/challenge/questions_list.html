@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load markdown_extras %}
 {% load static %}
 
 {% block header %}
@@ -118,7 +119,7 @@
                         </div>
                     </div>
                     <hr />
-                    {{ i.questionHTML|safe }}
+                    {{ i.questionHTML|safe_html }}
                 </div>
             </div>
         {% elif i.difficulty == "MEDIUM" %}
@@ -175,7 +176,7 @@
                     </div>
                 </div>
                 <hr />
-                {{ i.questionHTML|safe }}
+                {{ i.questionHTML|safe_html }}
             </div>
         </div>
     {% elif i.difficulty == "HARD" %}
@@ -232,7 +233,7 @@
                 </div>
             </div>
             <hr />
-            {{ i.questionHTML|safe }}
+            {{ i.questionHTML|safe_html }}
         </div>
     </div>
 {% else %}
@@ -281,7 +282,7 @@
             </div>
         </div>
         <hr />
-        {{ i.questionHTML|safe }}
+        {{ i.questionHTML|safe_html }}
     </div>
 </div>
 {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdown_extras %}
 {% load static %}
 {% block header %}
     <link rel="stylesheet"
@@ -12,7 +13,7 @@
             {{ question.title }}
         </h1>
         <div style="font-size: 20px">
-            {{ question.questionHTML|safe }}
+            {{ question.questionHTML|safe_html }}
         </div>
         {% for i in page_obj %}
             <div class="card" style="margin: 12px">
