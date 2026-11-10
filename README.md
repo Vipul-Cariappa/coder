@@ -8,7 +8,12 @@ Code Turing name is derived from Alan Turing. One of the greatest minds in the f
 
 ## Install instructions for development
 
-Install the requirement pandoc version 2.17 from [here](https://github.com/jgm/pandoc/releases/tag/2.17.1.1).
+Requires Python 3.10 or newer (tested on 3.14) and Django 5.2 LTS.
+
+Install the `pandoc` binary from [here](https://github.com/jgm/pandoc/releases). The
+`pandoc` Python package (2.4) knows the document models up to pandoc **3.2.1**, so use a
+release at or below that — a newer binary only prints a warning and is treated as 3.2.1,
+which is not guaranteed to be correct.
 
 fork the repository first
 
