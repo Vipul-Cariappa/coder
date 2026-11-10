@@ -94,10 +94,14 @@ if ServerInfo["DATABASE"] == "sqlite":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": ServerInfo.get("SQLITE_PATH") or BASE_DIR / "db.sqlite3",
+            "OPTIONS": {
+                "transaction_mode": "IMMEDIATE",
+                "timeout": 20,
+                "init_command": "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;",
+            },
         }
     }
-
 else:
     DATABASES = {
         "default": {
